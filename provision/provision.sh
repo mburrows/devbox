@@ -17,6 +17,8 @@ sudo apt-get -y install r-base-dev
 sudo apt-get -y install ngspice
 
 # Install pathogen plugin for vim
-if [ ! -f "~/.vim/bundle/Vundle.vim" ] ; then
-    git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+if [ ! -d "$HOME/.vim/bundle" ] ; then
+    mkdir -p $HOME/.vim/bundle
+    git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
+    echo "Vundle installed. Now run: vim +PluginInstall +qall"
 fi
