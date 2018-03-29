@@ -232,6 +232,9 @@ noremap <leader>z, :Tabularize /,\zs/l0r1<CR>
 " Fast delete a buffer
 noremap <leader>x :bd<CR>
 
+" Fast save
+noremap <leader>s :update<CR>
+
 " Browse old files
 noremap <leader>o :browse oldfiles<CR>
 

@@ -1,5 +1,8 @@
 sudo apt-get update && sudo apt-get -y upgrade && sudo apt-get -y autoremove
 
+# Utilities
+sudo apt-get -y install xclip
+
 # Dev tools
 sudo apt-get -y install git
 
@@ -16,9 +19,9 @@ sudo apt-get -y install r-base-dev
 # Circuit simulation using SPICE
 sudo apt-get -y install ngspice
 
-# Install pathogen plugin for vim
+# Install Vundle plugin for vim
 if [ ! -d "$HOME/.vim/bundle" ] ; then
-    mkdir -p $HOME/.vim/bundle
     git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
     echo "Vundle installed. Now run: vim +PluginInstall +qall"
 fi
+    
