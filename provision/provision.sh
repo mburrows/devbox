@@ -40,6 +40,7 @@ source ~/.config/base16-shell/scripts/base16-tomorrow-night.sh
 
 alias rl='source ~/.bashrc'
 alias g='git grep'
+alias l='ls -lrt'
 EOS
 
     cat << 'EOS' >> $HOME/.bashrc
