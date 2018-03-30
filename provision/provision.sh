@@ -25,4 +25,25 @@ if [ ! -d "$HOME/.vim/bundle" ] ; then
     git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
     echo "Vundle installed. Now run: vim +PluginInstall +qall"
 fi
+
+# Install some perty colours for the shell
+if [ ! -d "$HOME/.config/base16-shell" ] ; then
+    git clone https://github.com/chriskempson/base16-shell.git $HOME/.config/base16-shell
+fi
     
+# Setup local bashrc overrides
+if [ ! -f "$HOME/.bashrc.local" ] ; then
+    cat << 'EOS' > $HOME/.bashrc.local
+export EDITOR=vim
+export PS1='\W$ '
+source ~/.config/base16-shell/scripts/base16-tomorrow-night.sh
+
+alias rl='source ~/.bashrc'
+alias g='git grep'
+EOS
+
+    cat << 'EOS' >> $HOME/.bashrc
+
+[[ -f ~/.bashrc.local ]] && source ~/.bashrc.local
+EOS
+fi

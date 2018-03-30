@@ -91,8 +91,9 @@ endif
 if &t_Co >= 8 || has("gui_running")
     syntax on
     set t_Co=256
-    set background=dark
-    colorscheme default
+    set background=dark                                  
+    let base16colorspace=256  " Access colors present in 256 colorspace
+    colorscheme base16-tomorrow-night
     " tabs, grey out inactive menus, menu bar, console dialogs, no scrollbars,
     " no toolbars
     set guioptions=egmc
