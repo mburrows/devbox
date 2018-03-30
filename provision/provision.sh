@@ -35,7 +35,7 @@ fi
 if [ ! -f "$HOME/.bashrc.local" ] ; then
     cat << 'EOS' > $HOME/.bashrc.local
 export EDITOR=vim
-export PS1='\W$ '
+export PS1="\[\e[32m\]\u\[\e[m\]\[\e[32m\]:\[\e[m\]\[\e[35m\]\W\[\e[m\]\[\e[37m\]\\$\[\e[m\] "
 source ~/.config/base16-shell/scripts/base16-tomorrow-night.sh
 
 alias rl='source ~/.bashrc'
@@ -44,6 +44,6 @@ EOS
 
     cat << 'EOS' >> $HOME/.bashrc
 
-[[ -f ~/.bashrc.local ]] && source ~/.bashrc.local
+[[ -f ~/.bashrc.local ]] && . ~/.bashrc.local
 EOS
 fi
