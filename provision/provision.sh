@@ -34,13 +34,15 @@ fi
 # Setup local bashrc overrides
 if [ ! -f "$HOME/.bashrc.local" ] ; then
     cat << 'EOS' > $HOME/.bashrc.local
+source ~/.config/base16-shell/scripts/base16-tomorrow-night.sh
+
 export EDITOR=vim
 export PS1="\[\e[32m\]\u\[\e[m\]\[\e[32m\]:\[\e[m\]\[\e[35m\]\W\[\e[m\]\[\e[37m\]\\$\[\e[m\] "
-source ~/.config/base16-shell/scripts/base16-tomorrow-night.sh
 
 alias rl='source ~/.bashrc'
 alias g='git grep'
 alias l='ls -lrt'
+alias tmux='tmux -2'
 EOS
 
     cat << 'EOS' >> $HOME/.bashrc
