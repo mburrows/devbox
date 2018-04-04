@@ -36,7 +36,7 @@ set title                " change the terminal's title
 set visualbell           " don't beep
 set noerrorbells         " no honestly, don't beep
 set wildmenu             " make tab completion for files/buffers act like bash
-set wildmode=list:full   " show a list when pressing tab and complete
+set wildmode=longest,list,full
 set wildignore=*.swp,*.bak,*.pyc,*.class,*.o
 set spelllang=en_gb
 set dictionary=~/.ispell_british,/usr/share/dict/words
