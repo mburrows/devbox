@@ -20,6 +20,7 @@ Plugin 'chriskempson/base16-vim'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'christoomey/vim-tmux-navigator'
+Plugin 'vim-scripts/argtextobj.vim'
 call vundle#end()
 
 set nowrap               " turn off line wrapping, turn it back on with :Wrap
