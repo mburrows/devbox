@@ -1,0 +1,41 @@
+################################################################################
+## ~/.inputrc
+##
+## Control the behaviour of the readline library used e.g.
+## by the bash in the interactive mode for line editing.
+##
+################################################################################
+
+# Use vi, not emacs style editing
+set editing-mode vi
+
+# The bell style used e.g. on error or tab completion, possible values
+# are `none', `visible', and `audible' the ringing the bell.
+set bell-style none
+
+# If set to on, words which have more than one possible completion cause the
+# matches to be listed immediately instead of ringing the bell.
+set show-all-if-ambiguous on
+set completion-ignore-case on
+
+# Keymaps for when we are in command mode
+set keymap vi-command
+
+# Insert the arguments from the last command
+"p": "i !!*\r"
+
+# Keymaps for when we are in insert mode
+set keymap vi-insert
+
+control-p: history-search-backward
+control-n: history-search-forward
+
+# Reinstate Alt+. to yank the last argument
+"\e.": yank-last-arg
+
+# Reinstate binding for p in insert mode
+"p": self-insert
+
+#
+# end
+#
