@@ -254,9 +254,6 @@ nnoremap <leader>go :Git diff origin
 " Toggle relative line numbers (useful for terminal copying)
 nnoremap <leader>n :ToggleMouse<CR>
 
-" Quick setting of textwidth for paragraph wrapping
-map <leader>q :set textwidth=<C-R>=col(".")<CR><CR>
-
 " Quicker clipboard copy and paste
 nnoremap <leader>p "*p
 nnoremap <leader>y "*y
@@ -283,9 +280,7 @@ let g:markdown_fold_style = 'nested'
 
 " Use Ctrl-P for file navigation
 map <leader>j :CtrlPMixed<CR>
+map <leader>m :CtrlPMRUFiles<CR>
 
-" UltiSnips trigger configuration
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-j>"
-let g:UltiSnipsJumpBackwardTrigger="<c-k>"
-
+" Quick quicklist
+map <leader>q :cwin<CR>
