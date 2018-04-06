@@ -285,6 +285,10 @@ map <leader>q :cwin<CR>
 
 " Stop the nonsense
 noremap q: :q
+cabbrev ew :wq
+cabbrev qw :wq 
+nnoremap ; :
+nnoremap : ;
 
 " Open last file in vertical split
 noremap <leader>l :execute "rightbelow vsplit " . bufname('#')<CR>
