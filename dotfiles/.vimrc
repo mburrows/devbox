@@ -291,3 +291,7 @@ noremap <leader>l :execute "rightbelow vsplit " . bufname('#')<CR>
 " Hit v to select one character, v again to expand selection, C-v to shrink it
 vmap v <Plug>(expand_region_expand)
 vmap <C-v> <Plug>(expand_region_shrink)
+
+" Always use very magic mode when searching
+nnoremap / /\v
+nnoremap ? ?\v
