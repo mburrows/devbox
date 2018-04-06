@@ -52,8 +52,8 @@ set confirm
 set relativenumber
 set number
 
-" Change the mapleader from \ to ,
-let mapleader=","
+" Change the mapleader to space key
+let mapleader="\<Space>"
 
 " Turn on doxygen syntax highlighting (for C++ comments)
 let g:load_doxygen_syntax=1
