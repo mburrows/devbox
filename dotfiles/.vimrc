@@ -21,6 +21,7 @@ Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'vim-scripts/argtextobj.vim'
+Plugin 'terryma/vim-expand-region'
 call vundle#end()
 
 set nowrap               " turn off line wrapping, turn it back on with :Wrap
@@ -166,7 +167,6 @@ endif " has("autocmd")
 
 " Remap esc key for fast switching and ipad keyboards
 inoremap jj <Esc>
-inoremap fd <Esc>
 
 " Quick dispatches
 noremap <F1> :Make<CR>
@@ -190,7 +190,7 @@ noremap <F12> :cnf<CR>
 nnoremap <leader>c :cclose<CR>:pclose<CR>
 
 " Shortcut to search for current word under cursor using git grep
-nnoremap ,8 :exe ":Ggrep " . expand("<cword>")<CR>
+nnoremap <leader>8 :exe ":Ggrep " . expand("<cword>")<CR>
 
 " Quickly edit the vimrc file
 nnoremap <leader>v :tabedit $MYVIMRC<CR>
@@ -205,7 +205,7 @@ nnoremap <leader>5 :%s/\<<C-r>=expand("<cword>")<CR>\>/
 nnoremap <leader>w :%s/\s\+$//e<CR>
 
 " Shortcut to rapidly toggle `set list`
-nnoremap <leader>l :set list!<CR>
+nnoremap <leader>t :set list!<CR>
 set listchars=tab:>.,trail:.,extends:#,nbsp:.
 
 " Make opening of files in the same directory easier, and use %% in command
@@ -217,14 +217,6 @@ noremap <leader>cd :lcd %:h
 
 " Turn on all the options to wrap text properly
 command! -nargs=* Wrap set wrap linebreak nolist
-
-" Bubble single lines
-nnoremap <C-Up> ddkP
-nnoremap <C-Down> ddp
-
-" Bubble multiple lines
-vnoremap <C-Up> xkP`[V`]
-vnoremap <C-Down> xp`[V`]
 
 " Shortcuts for tabular alignment
 noremap <leader>z= :Tabularize /=<CR>
@@ -254,13 +246,18 @@ nnoremap <leader>go :Git diff origin
 " Toggle relative line numbers (useful for terminal copying)
 nnoremap <leader>n :ToggleMouse<CR>
 
+" Automatically jump to end of text you paste
+vnoremap <silent> y y`]
+vnoremap <silent> p p`]
+nnoremap <silent> p p`]
+
 " Quicker clipboard copy and paste
 nnoremap <leader>p "*p
 nnoremap <leader>y "*y
-
-" Toggle folds with the spacebar
-nnoremap <Space> za
-vnoremap <Space> za
+nnoremap <leader>d "*d
+vnoremap <leader>p "*p
+vnoremap <leader>y "*y
+vnoremap <leader>d "*d
 
 " Fast opening of files in current directory
 map <leader>e  :e %%
@@ -284,3 +281,13 @@ map <leader>m :CtrlPMRUFiles<CR>
 
 " Quick quicklist
 map <leader>q :cwin<CR>
+
+" Stop the nonsense
+noremap q: :q
+
+" Open last file in vertical split
+noremap <leader>l :execute "rightbelow vsplit " . bufname('#')<CR>
+
+" Hit v to select one character, v again to expand selection, C-v to shrink it
+vmap v <Plug>(expand_region_expand)
+vmap <C-v> <Plug>(expand_region_shrink)
