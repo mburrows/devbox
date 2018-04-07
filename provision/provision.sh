@@ -1,3 +1,5 @@
+sudo add-apt-repository -y ppa:neovim-ppa/unstable
+
 sudo apt-get update && sudo apt-get -y upgrade && sudo apt-get -y autoremove
 
 # Utilities
@@ -20,6 +22,23 @@ sudo apt-get -y install ipython python-numpy python-matplotlib python-scipy
 
 # Circuit simulation using SPICE
 sudo apt-get -y install ngspice
+
+# Install neovim and optional provider plugins
+sudo apt-get -y install neovim
+sudo apt-get -y install python-dev python-pip python3-dev python3-pip
+sudo apt-get -y install ruby ruby-dev
+sudo pip2 install --upgrade neovim
+sudo pip3 install --upgrade neovim
+sudo gem install neovim
+
+if [ ! -d "$HOME/.config/nvim" ] ; then
+    mkdir -p $HOME/.config/nvim
+    cat << 'EOS' > $HOME/.config/nvim/init.vim
+set runtimepath^=~/.vim runtimepath+=~/.vim/after
+let &packpath = &runtimepath
+source ~/.vimrc
+EOS
+fi
 
 # Install Vundle plugin for vim
 if [ ! -d "$HOME/.vim/bundle" ] ; then
@@ -52,11 +71,3 @@ EOS
 EOS
 fi
 
-# Make sure all dotfiles are in unix format
-for f in ~/.*; do
-    if [ -f "$f" ] ; then 
-        dos2unix $f
-    fi
-done
-
-    
