@@ -1,8 +1,10 @@
 sudo apt-get update && sudo apt-get -y upgrade && sudo apt-get -y autoremove
 
 # Utilities
-sudo apt-get -y install xclip
 sudo apt-get -y install dos2unix
+
+# Basic X11 windowing
+sudo apt-get -y install x11-apps xauth xclip
 
 # Dev tools
 sudo apt-get -y install git
@@ -13,9 +15,8 @@ sudo apt-get -y install clang
 sudo apt-get -y install libboost-dev
 sudo apt-get -y install gdb
 
-# R environment
-sudo apt-get -y install r-base
-sudo apt-get -y install r-base-dev
+# Python/matplotlib
+sudo apt-get -y install ipython python-numpy python-matplotlib python-scipy
 
 # Circuit simulation using SPICE
 sudo apt-get -y install ngspice
@@ -50,3 +51,12 @@ EOS
 [[ -f ~/.bashrc.local ]] && . ~/.bashrc.local
 EOS
 fi
+
+# Make sure all dotfiles are in unix format
+for f in ~/.*; do
+    if [ -f "$f" ] ; then 
+        dos2unix $f
+    fi
+done
+
+    
