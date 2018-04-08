@@ -10,7 +10,6 @@ Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-unimpaired'
-Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-dispatch'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'kien/ctrlp.vim'
@@ -23,6 +22,8 @@ Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'vim-scripts/argtextobj.vim'
 Plugin 'terryma/vim-expand-region'
 Plugin 'wincent/terminus'
+Plugin 'scrooloose/nerdtree'
+Plugin 'tpope/vim-fugitive'
 call vundle#end()
 
 set nowrap               " turn off line wrapping, turn it back on with :Wrap
@@ -80,10 +81,6 @@ set shiftround " use multiple of shiftwidth when indenting with '<' and '>'
 
 " Setup search path for gf and :find
 set path+=~/cpp/**
-
-" Use Q for formatting the current paragraph (or selection)
-vnoremap Q gq
-nnoremap Q gqap
 
 " In many terminal emulators the mouse works just fine, thus enable it.
 if has('mouse')
@@ -168,103 +165,22 @@ endif " has("autocmd")
 
 " Remap esc key for fast switching and ipad keyboards
 inoremap jj <Esc>
-
-" Quick dispatches
-noremap <F1> :Make<CR>
-noremap <F2> :Dispatch<CR>
-noremap <F3> :Dispatch!<CR>
-noremap <F4> :cwin<CR>
-
-" Fast switching between .h and .cpp files
-noremap <leader>h :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
-
-" Use to turn off autoindenting when pasting from the clipboard
-set pastetoggle=<F5>
-
-" Rapidly switch between quicklist entries
-noremap <F9>  :cprev<CR>
-noremap <F10> :cnext<CR>
-noremap <F11> :cpf<CR>
-noremap <F12> :cnf<CR>
-
-" Easy closing of quicklist/preview windows
-nnoremap <leader>c :cclose<CR>:pclose<CR>
-
-" Shortcut to search for current word under cursor using git grep
-nnoremap <leader>8 :exe ":Ggrep " . expand("<cword>")<CR>
-
-" Quickly edit the vimrc file
-nnoremap <leader>v :tabedit $MYVIMRC<CR>
-
-" Write out as sudo with w!!
-cmap w!! w !sudo tee % >/dev/null
-
-" Pull word under cursor into LHS of a substitute (for quick search and replace)
-nnoremap <leader>5 :%s/\<<C-r>=expand("<cword>")<CR>\>/
-
-" Cleanup trailing whitespace with ,w
-nnoremap <leader>w :%s/\s\+$//e<CR>
-
-" Shortcut to rapidly toggle `set list`
-nnoremap <leader>t :set list!<CR>
-set listchars=tab:>.,trail:.,extends:#,nbsp:.
+cnoremap jj <Esc>
 
 " Make opening of files in the same directory easier, and use %% in command
 " mode to expand the directory of the current file.
 cnoremap %% <C-R>=expand('%:h').'/'<cr>
 
-" cd to the directory containing the file in the buffer
-noremap <leader>cd :lcd %:h
-
 " Turn on all the options to wrap text properly
 command! -nargs=* Wrap set wrap linebreak nolist
 
-" Shortcuts for tabular alignment
-noremap <leader>z= :Tabularize /=<CR>
-noremap <leader>z: :Tabularize /:\zs<CR>
-noremap <leader>z, :Tabularize /,\zs/l0r1<CR>
-
-" Fast delete a buffer
-noremap <leader>x :bd<CR>
-
-" Fast save
-noremap <leader>s :update<CR>
-
-" Browse old files
-noremap <leader>o :browse oldfiles<CR>
-
 " Select just pasted text
 nnoremap gp `[v`]
-
-" Git shortcuts
-nnoremap <leader>gg :Ggrep 
-nnoremap <leader>gd :Gdiff<CR>
-nnoremap <leader>gs :Gstatus<CR>
-nnoremap <leader>gb :Gblame<CR>
-nnoremap <leader>ge :Gedit<CR>
-nnoremap <leader>go :Git diff origin
-
-" Toggle relative line numbers (useful for terminal copying)
-nnoremap <leader>n :ToggleMouse<CR>
 
 " Automatically jump to end of text you paste
 vnoremap <silent> y y`]
 vnoremap <silent> p p`]
 nnoremap <silent> p p`]
-
-" Quicker clipboard copy and paste
-nnoremap <leader>p "*p
-nnoremap <leader>y "*y
-nnoremap <leader>d "*d
-vnoremap <leader>p "*p
-vnoremap <leader>y "*y
-vnoremap <leader>d "*d
-
-" Fast opening of files in current directory
-map <leader>e  :e %%
-map <leader>es :sp %%
-map <leader>ev :vsp %%
-map <leader>et :tabe %%
 
 " Filter previous/next ex commands with C-p and C-n
 cnoremap <C-p> <Up>
@@ -276,22 +192,10 @@ nnoremap Y y$
 " Only show H1 headers. The other option is 'stacked' which shows all headers.
 let g:markdown_fold_style = 'nested'
 
-" Use Ctrl-P for file navigation
-map <leader>j :CtrlPMixed<CR>
-map <leader>m :CtrlPMRUFiles<CR>
-
-" Quick quicklist
-map <leader>q :cwin<CR>
-
 " Stop the nonsense
 noremap q: :q
 cabbrev ew :wq
 cabbrev qw :wq 
-nnoremap ; :
-nnoremap : ;
-
-" Open last file in vertical split
-noremap <leader>l :execute "rightbelow vsplit " . bufname('#')<CR>
 
 " Hit v to select one character, v again to expand selection, C-v to shrink it
 vmap v <Plug>(expand_region_expand)
@@ -300,3 +204,203 @@ vmap <C-v> <Plug>(expand_region_shrink)
 " Always use very magic mode when searching
 nnoremap / /\v
 nnoremap ? ?\v
+
+" Really short shortcuts
+nnoremap <leader><leader> :
+nnoremap <leader>8 :execute ":Ggrep " . expand("<cword>")<CR>
+nnoremap <leader>5 :%s/\<<C-r>=expand("<cword>")<CR>\>/
+nnoremap <leader><tab> <C-^>
+
+" b - buffers
+"     bd - buffer delete
+"     bc - buffer close
+"     bb - CtrlPBuffer
+"     bl - buffer list
+"     bp - buffer previous
+"     bn - buffer next
+"     br - buffer rewind
+nnoremap <leader>bd :bdelete<CR>
+nnoremap <leader>bc :bdelete<CR>
+nnoremap <leader>bb :CtrlPBuffer<CR>
+nnoremap <leader>bl :ls<CR>
+nnoremap <leader>bp :bp<CR>
+nnoremap <leader>bn :bn<CR>
+nnoremap <leader>br :brewind<CR>
+
+" c - clipboard
+"   cd - clipboard delete
+"   cy - clipboard yank
+"   cp - clipboard paste
+nnoremap <leader>cd "*d
+vnoremap <leader>cd "*d
+nnoremap <leader>cy "*y
+vnoremap <leader>cy "*y
+nnoremap <leader>cp "*p
+vnoremap <leader>cp "*p
+nnoremap <leader>cr :registers<CR>
+
+" d - delete
+"     df - delete function
+"     dw - delete trailing whitespace
+"     dl - delete empty lines
+"     do - only one space
+nnoremap <leader>dw :%s/\s\+$//e<CR>
+" TODO: implement df - delete function
+" TODO: implement dl - delete empty lines
+" TODO: implement do - only one space
+
+" e - edit
+"     ee - edit %%
+"     ev - edit vertically
+"     eh - edit split (horizontally)
+"     es - edit split (horizontally)
+"     et - edit tab
+noremap <expr> <leader>ee ':edit ' . expand('%:h') .'/'
+noremap <expr> <leader>es ':split ' . expand('%:h') .'/'
+noremap <expr> <leader>eh ':split ' . expand('%:h') .'/'
+noremap <expr> <leader>ev ':vert split ' . expand('%:h') .'/'
+noremap <expr> <leader>et ':tabedit ' . expand('%:h') .'/'
+
+" f - files
+"     fs - file save
+"     fS - save all files
+"     fv - .vimrc
+"     fr - CtrlPMRU
+"     ff - file open %%
+"     fj - file jump (NerdTree locate file)
+"     fl - open last file
+"     fW - write out as sudo
+"     fh - header/implementation file
+"     fi - find inline header file
+"     ft - NerdTree toggle
+nnoremap <leader>fs :update<CR>
+nnoremap <leader>fS :wall<CR>
+nnoremap <leader>fW :w !sudo tee % >/dev/null<CR>
+nnoremap <leader>fv :tabedit ~/.vimrc<CR>
+nnoremap <leader>fr :CtrlPMRUFiles<CR>
+nnoremap <leader>ff :CtrlP<CR>
+nnoremap <leader>ft :NERDTreeToggle<CR>
+nnoremap <leader>fj :NERDTreeFind<CR>
+nnoremap <leader>fl :execute "rightbelow vsplit " . bufname('#')<CR>
+nnoremap <leader>fh :edit %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
+" TODO: implelement fi - find inline header file
+
+" g - git
+"     gg - git grep
+"     gs - git status
+"     gc - git commit
+"     gb - git blame
+"     gd - git diff
+"     go - git diff origin
+"     gv - git svnup
+"     gz - git stash
+"     gp - git stash pop
+"     gl - git log
+"     gr - git rebase master
+nnoremap <leader>gg :Glgrep 
+nnoremap <leader>gg :Gcommit<CR>
+nnoremap <leader>gd :Gdiff<CR>
+nnoremap <leader>go :Gdiff origin<CR>
+nnoremap <leader>gs :Gstatus<CR>
+nnoremap <leader>gb :Gblame<CR>
+nnoremap <leader>gv :Git svnup<CR>
+nnoremap <leader>gz :Git stash<CR>
+nnoremap <leader>gp :Git stash pop<CR>
+nnoremap <leader>gl :Gllog<CR>
+nnoremap <leader>g1 :Git log --oneline<CR>
+nnoremap <leader>gr :Git rebase master
+
+" h - help
+"     hh - help
+"     hf - help functions
+"     hs - help vim scripts
+nnoremap <leader>hh :tab help 
+nnoremap <leader>hf :tab help functions<CR>
+nnoremap <leader>hs :tab help usr_41.txt<CR>
+nnoremap <expr> <leader>hw ':tab help ' . expand("<cword>")
+
+" l - locations
+"     ll - open location list
+"     ln - next location
+"     lp - previous location
+"     lf - next location file
+"     lb - previous location file
+"     lc - close location list
+"     lr - rewind location list
+nnoremap <leader>ll :lwindow 15<CR>
+nnoremap <leader>ln :lnext<CR>
+nnoremap <leader>lp :lprev<CR>
+nnoremap <leader>lf :lnfile<CR>
+nnoremap <leader>lb :lpfile<CR>
+nnoremap <leader>lc :lclose<CR>
+nnoremap <leader>lr :lrewind<CR>
+
+" p - project
+"     pt - project tree
+"     pf - open file at project root (CtrlP ~/cpp)
+"     pc - project compile
+nnoremap <leader>pf :CtrlP ~/cpp<CR>
+nnoremap <leader>pt :NERDTree ~/cpp<CR>
+nnoremap <leader>pc :Make<CR>
+
+" q - quicklist
+"     qq - open quicklist
+"     qn - next item
+"     qp - previous item
+"     qf - next file
+"     qb - previous file
+"     qc - close quicklist
+"     qr - rewind quicklist
+nnoremap <leader>qq :cwindow 15<CR>
+nnoremap <leader>qn :cnext<CR>
+nnoremap <leader>qp :cprev<CR>
+nnoremap <leader>qf :cnfile<CR>
+nnoremap <leader>qb :cpfile<CR>
+nnoremap <leader>qc :cclose<CR>
+nnoremap <leader>qr :crewind<CR>
+
+" r - run tests
+"     rt - run test (dispatch)
+"     rd - run test (dispatch!)
+"     rc - focus on test case and run it
+"     rs - focus on test suite and run it
+"     rp - run parallel test
+nnoremap <leader>rt :Dispatch<CR>
+nnoremap <leader>rd :Dispatch!<CR>
+" TODO: implement rc
+" TODO: implement rs
+" TODO: implement rp
+
+" s - search
+"     sg - grep
+"     sG - grep add
+"     sf - find
+"     st - CtrlPTag
+"     sw - search current word
+"     sr - search and replace current word
+nnoremap <leader>sg :lvimgrep 
+nnoremap <leader>sG :lvimgrepadd 
+nnoremap <leader>sf :find 
+nnoremap <leader>st :CtrlPTag<CR>
+nnoremap <expr> <leader>sw ':lvimgrep ' . expand("<cword>")
+nnoremap <leader>sr :%s/\<<C-r>=expand("<cword>")<CR>\>/
+
+" t - toggle
+"     th - toggle highlight
+"     tw - toggle whitespace
+"     tn - toggle line numbers
+nnoremap <leader>th :set hlsearch!<CR>
+set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
+nnoremap <leader>tw :set list!<CR>
+nnoremap <leader>tn :set relativenumber!<CR>:set number!<CR>
+
+" w - window
+nnoremap <leader>w <C-w>
+
+" x - modification
+"     x= - align on -
+"     x: - align on :
+"     x, - align on ,
+noremap <leader>x= :Tabularize /=<CR>
+noremap <leader>x: :Tabularize /:\zs<CR>
+noremap <leader>x, :Tabularize /,\zs/l0r1<CR>
