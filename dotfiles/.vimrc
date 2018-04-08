@@ -11,6 +11,8 @@ Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'tpope/vim-dispatch'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-projectionist'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'kien/ctrlp.vim'
 Plugin 'godlygeek/tabular'
@@ -23,7 +25,6 @@ Plugin 'vim-scripts/argtextobj.vim'
 Plugin 'terryma/vim-expand-region'
 Plugin 'wincent/terminus'
 Plugin 'scrooloose/nerdtree'
-Plugin 'tpope/vim-fugitive'
 call vundle#end()
 
 set nowrap               " turn off line wrapping, turn it back on with :Wrap
@@ -117,9 +118,9 @@ if has("autocmd")
 
         " When editing a file, always jump to the last known cursor position.
         autocmd BufReadPost *
-                    \ if line("'\"") > 1 && line("'\"") <= line("$") |
-                    \   exe "normal! g`\"" |
-                    \ endif
+                \ if line("'\"") > 1 && line("'\"") <= line("$") |
+                \   exe "normal! g`\"" |
+                \ endif
 
         " Autoload .vimrc when I save it
         autocmd BufWritePost .vimrc source $MYVIMRC
@@ -127,11 +128,6 @@ if has("autocmd")
         " Avoid polluting buffer list with fugitive buffers
         autocmd BufReadPost fugitive://* set bufhidden=delete
 
-        " Use WAF for ECN builds                              
-        autocmd BufRead,BufNewFile **/ecn/**/*.cpp setlocal makeprg=~/cpp/waf\ -j48\ -pp\ 2\>\&1\|\ egrep\ -v\ '^ICECC\|\ note:' tags+=~/cpp/tags
-        autocmd BufRead,BufNewFile **/ecn/**/*.h setlocal makeprg=~/cpp/waf\ -j48\ -pp\ 2\>\&1\|\ egrep\ -v\ '^ICECC\|\ note:' tags+=~/cpp/tags
-        autocmd BufRead,BufNewFile **/ecn/**/*.py setlocal tags+=~/python/tags
-        
         " Prefer // for C++ comments
         autocmd FileType cpp setlocal commentstring=//\ %s
 
@@ -151,7 +147,6 @@ if has("autocmd")
             set statusline+=%{fugitive#statusline()} " git hotness
             set statusline+=\ [%{&ff}/%Y]            " filetype
             set statusline+=\ [%{getcwd()}]          " current dir
-            "set statusline+=\ [A=\%03.3b/H=\%02.2B] " ASCII / hexadecimal value of char
             set statusline+=%=%-14.(%l,%c%V%)\ %p%%  " right aligned file nav info
         endif
 
@@ -210,6 +205,20 @@ nnoremap <leader><leader> :
 nnoremap <leader>8 :execute ":Ggrep " . expand("<cword>")<CR>
 nnoremap <leader>5 :%s/\<<C-r>=expand("<cword>")<CR>\>/
 nnoremap <leader><tab> <C-^>
+
+" a - alternates
+"     aa - alternate file
+"     av - alternate file in vertical
+"     as - alternate file in split
+"     at - alternate file in tab
+"     ad - replace contents with template
+"     ai - alternate .inc file
+nnoremap <leader>aa :A<CR>
+nnoremap <leader>av :AV<CR>
+nnoremap <leader>as :AS<CR>
+nnoremap <leader>at :AT<CR>
+nnoremap <leader>ad :AD<CR>
+nnoremap <expr> <leader>ai ':Einc ' . expand('%:t:r')<CR>
 
 " b - buffers
 "     bd - buffer delete
@@ -315,6 +324,7 @@ nnoremap <leader>gr :Git rebase master
 "     hf - help functions
 "     hs - help vim scripts
 nnoremap <leader>hh :tab help 
+nnoremap <leader>hv :vert help 
 nnoremap <leader>hf :tab help functions<CR>
 nnoremap <leader>hs :tab help usr_41.txt<CR>
 nnoremap <expr> <leader>hw ':tab help ' . expand("<cword>")
@@ -389,10 +399,14 @@ nnoremap <leader>sr :%s/\<<C-r>=expand("<cword>")<CR>\>/
 "     th - toggle highlight
 "     tw - toggle whitespace
 "     tn - toggle line numbers
+"     tr - toggle registers
+"     tt - toggle NERDTree
 nnoremap <leader>th :set hlsearch!<CR>
 set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
 nnoremap <leader>tw :set list!<CR>
 nnoremap <leader>tn :set relativenumber!<CR>:set number!<CR>
+nnoremap <leader>tr :registers<CR>
+nnoremap <leader>tt :NERDTreeToggle<CR>
 
 " w - window
 nnoremap <leader>w <C-w>
@@ -404,3 +418,34 @@ nnoremap <leader>w <C-w>
 noremap <leader>x= :Tabularize /=<CR>
 noremap <leader>x: :Tabularize /:\zs<CR>
 noremap <leader>x, :Tabularize /,\zs/l0r1<CR>
+
+" Setup projectionist heuristics (see alternate 'a' mnemonic above)
+let g:projectionist_heuristics = {
+\   '*': {
+\       '*.cpp': {
+\           'alternate': '{}.h',
+\           'type': 'source',
+\       },
+\       '*_inline.h': {
+\           'alternate': [
+\               '{}.cpp',
+\               '{}.h',
+\           ],
+\           'type': 'inline',
+\       },
+\       '*.h': {
+\           'alternate': [
+\               '{}_inline.h',
+\               '{}.cpp',
+\           ],
+\           'type': 'header',
+\       },
+\       '*.inc': {
+\           'alternate': [
+\               '{}.h',
+\               '{}.cpp',
+\           ],
+\           'type': 'inc'
+\       },
+\   },
+\}
