@@ -14,7 +14,7 @@ Plug 'craigemery/vim-autotag'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'edkolev/tmuxline.vim'
 Plug 'godlygeek/tabular'
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+Plug 'scrooloose/nerdtree'
 Plug 'terryma/vim-expand-region'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
@@ -116,9 +116,6 @@ if has("autocmd")
     augroup vimrcEx
         autocmd!
 
-        " For all text files set 'textwidth' to 80 characters.
-        autocmd FileType text setlocal textwidth=80
-
         " When editing a file, always jump to the last known cursor position.
         autocmd BufReadPost *
                 \ if line("'\"") > 1 && line("'\"") <= line("$") |
@@ -131,26 +128,15 @@ if has("autocmd")
         " Avoid polluting buffer list with fugitive buffers
         autocmd BufReadPost fugitive://* set bufhidden=delete
 
-        autocmd BufRead,BufNewFile **/ecn/**/*.cpp setlocal makeprg=~/cpp/bb\ debug\ -j32\ -o\ /tmp/build/clang tags+=~/cpp/tags
-        autocmd BufRead,BufNewFile **/ecn/**/*.h   setlocal makeprg=~/cpp/bb\ debug\ -j32\ -o\ /tmp/build/clang tags+=~/cpp/tags
-        autocmd BufRead,BufNewFile **/ecn/**/*.inc setlocal makeprg=~/cpp/bb\ debug\ -j32\ -o\ /tmp/build/clang tags+=~/cpp/tags
-
-        " Treat .inc files as C++
-        autocmd BufNewFile,BufRead *.inc setfiletype cpp
-
-        autocmd BufRead,BufNewFile **/ecn/**/*.py setlocal tags+=~/python/tags
-        
-        " Prefer // for C++ comments
-        autocmd FileType cpp setlocal commentstring=//\ %s
-
-        " Treat .sqli files as SQL
+        " FileType overrides
+        autocmd BufNewFile,BufRead *.inc  setfiletype cpp
         autocmd BufNewFile,BufRead *.sqli setfiletype sql
-                            
-        " Treat .md files as Markdown rather than Modula-2
-        autocmd BufNewFile,BufReadPost *.md setfiletype markdown
+        autocmd BufNewFile,BufRead *.md   setfiletype markdown
+        autocmd BufNewFile,BufRead *.cir  setfiletype spice
 
-        " Treat .cir files as SPICE circuits
-        autocmd BufNewFile,BufRead *.cir setfiletype spice
+        " FileType local options
+        autocmd FileType text setlocal textwidth=120
+        autocmd FileType cpp  setlocal commentstring=//\ %s
 
         if has('statusline')
             set laststatus=2                         " always display the status line
@@ -248,7 +234,7 @@ nnoremap <leader>av :AV<CR>
 nnoremap <leader>as :AS<CR>
 nnoremap <leader>at :AT<CR>
 nnoremap <leader>ad :AD<CR>
-nnoremap <expr> <leader>ai ':Einc ' . expand('%:t:r')<CR>
+nnoremap <expr> <leader>ai ':Einc ' . expand('%:t:r')
 
 " b - buffers
 "     bd - buffer delete
@@ -266,10 +252,11 @@ nnoremap <leader>bp :bp<CR>
 nnoremap <leader>bn :bn<CR>
 nnoremap <leader>br :brewind<CR>
 
-" c - clipboard
+" c - clipboard/compilation
 "   cd - clipboard delete
 "   cy - clipboard yank
 "   cp - clipboard paste
+nnoremap <leader>cc :Make<CR>
 nnoremap <leader>cd "*d
 vnoremap <leader>cd "*d
 nnoremap <leader>cy "*y
@@ -450,6 +437,9 @@ noremap <leader>x, :Tabularize /,\zs/l0r1<CR>
 " Setup projectionist heuristics (see alternate 'a' mnemonic above)
 let g:projectionist_heuristics = {
 \   '*': {
+\       'ecn/*': {
+\           'make': '~/cpp/bb\ debug\ -j32\ -o\ /tmp/build/clang'
+\       },
 \       '*.cpp': {
 \           'alternate': '{}.h',
 \           'type': 'source',
