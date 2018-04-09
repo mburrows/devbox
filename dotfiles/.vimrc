@@ -7,7 +7,7 @@ endif
 
 call plug#begin('~/.vim/plugged')
 Plug 'airblade/vim-gitgutter'
-Plug 'bling/vim-airline'
+Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'craigemery/vim-autotag'
@@ -131,6 +131,15 @@ if has("autocmd")
         " Avoid polluting buffer list with fugitive buffers
         autocmd BufReadPost fugitive://* set bufhidden=delete
 
+        autocmd BufRead,BufNewFile **/ecn/**/*.cpp setlocal makeprg=~/cpp/bb\ debug\ -j32\ -o\ /tmp/build/clang tags+=~/cpp/tags
+        autocmd BufRead,BufNewFile **/ecn/**/*.h   setlocal makeprg=~/cpp/bb\ debug\ -j32\ -o\ /tmp/build/clang tags+=~/cpp/tags
+        autocmd BufRead,BufNewFile **/ecn/**/*.inc setlocal makeprg=~/cpp/bb\ debug\ -j32\ -o\ /tmp/build/clang tags+=~/cpp/tags
+
+        " Treat .inc files as C++
+        autocmd BufNewFile,BufRead *.inc setfiletype cpp
+
+        autocmd BufRead,BufNewFile **/ecn/**/*.py setlocal tags+=~/python/tags
+        
         " Prefer // for C++ comments
         autocmd FileType cpp setlocal commentstring=//\ %s
 
@@ -189,6 +198,24 @@ nnoremap Y y$
 
 " Only show H1 headers. The other option is 'stacked' which shows all headers.
 let g:markdown_fold_style = 'nested'
+
+" Perty status line
+"let g:airline_powerline_fonts = 1
+let g:airline_theme='base16_tomorrow'
+let g:airline#extensions#tabline#formatter = 'unique_tail'
+
+" Turn off limits on max files in CtrlP
+let g:ctrlp_max_files = 0
+
+" Make nerd tree window wider
+let g:NERDTreeWinSize = 60
+
+" Always use very magic mode when searching
+nnoremap / /\v
+nnoremap ? ?\v
+
+" Edit snippets in a split window
+let g:UltiSnipsEditSplit="vertical"
 
 " Stop the nonsense
 noremap q: :q
