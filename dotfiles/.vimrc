@@ -1,31 +1,34 @@
-" Use Vundle for plugin management
 set nocompatible
-filetype off
 
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-Plugin 'Vundle/Vundle.vim'
-Plugin 'tpope/vim-abolish'
-Plugin 'tpope/vim-commentary'
-Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-unimpaired'
-Plugin 'tpope/vim-dispatch'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-projectionist'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'kien/ctrlp.vim'
-Plugin 'godlygeek/tabular'
-Plugin 'vim-scripts/VisIncr'
-Plugin 'chriskempson/base16-vim'
-Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
-Plugin 'christoomey/vim-tmux-navigator'
-Plugin 'vim-scripts/argtextobj.vim'
-Plugin 'terryma/vim-expand-region'
-Plugin 'wincent/terminus'
-Plugin 'scrooloose/nerdtree'
-call vundle#end()
+" Load vim-plug
+if empty(glob("~/.vim/autoload/plug.vim"))
+    execute '!curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.github.com/junegunn/vim-plug/master/plug.vim'
+endif
+
+call plug#begin('~/.vim/plugged')
+Plug 'airblade/vim-gitgutter'
+Plug 'bling/vim-airline'
+Plug 'chriskempson/base16-vim'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'craigemery/vim-autotag'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'edkolev/tmuxline.vim'
+Plug 'godlygeek/tabular'
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+Plug 'terryma/vim-expand-region'
+Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-projectionist'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'
+Plug 'vim-scripts/VisIncr'
+Plug 'vim-scripts/argtextobj.vim'
+Plug 'wincent/terminus'
+Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+call plug#end()
 
 set nowrap               " turn off line wrapping, turn it back on with :Wrap
 set backspace=indent,eol,start
@@ -48,7 +51,7 @@ set dictionary=~/.ispell_british,/usr/share/dict/words
 set virtualedit=all      " allow movement through virtual whitespace
 set autowrite            " auto write file contents when switching buffers
 set showmode
-set nocursorline
+set cursorline
 set viewdir=$HOME/.vim/views
 set lazyredraw           " dont redraw whilst executing macros
 set mousehide
@@ -111,7 +114,7 @@ if has("autocmd")
     " Put these in an autocmd group, so that we can delete them easily and
     " they don't get sourced twice when we reload our .vimrc
     augroup vimrcEx
-        au!
+        autocmd!
 
         " For all text files set 'textwidth' to 80 characters.
         autocmd FileType text setlocal textwidth=80
@@ -279,8 +282,6 @@ noremap <expr> <leader>et ':tabedit ' . expand('%:h') .'/'
 "     fj - file jump (NerdTree locate file)
 "     fl - open last file
 "     fW - write out as sudo
-"     fh - header/implementation file
-"     fi - find inline header file
 "     ft - NerdTree toggle
 nnoremap <leader>fs :update<CR>
 nnoremap <leader>fS :wall<CR>
@@ -291,8 +292,6 @@ nnoremap <leader>ff :CtrlP<CR>
 nnoremap <leader>ft :NERDTreeToggle<CR>
 nnoremap <leader>fj :NERDTreeFind<CR>
 nnoremap <leader>fl :execute "rightbelow vsplit " . bufname('#')<CR>
-nnoremap <leader>fh :edit %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
-" TODO: implelement fi - find inline header file
 
 " g - git
 "     gg - git grep
@@ -307,7 +306,7 @@ nnoremap <leader>fh :edit %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
 "     gl - git log
 "     gr - git rebase master
 nnoremap <leader>gg :Glgrep 
-nnoremap <leader>gg :Gcommit<CR>
+nnoremap <leader>gc :Gcommit<CR>
 nnoremap <leader>gd :Gdiff<CR>
 nnoremap <leader>go :Gdiff origin<CR>
 nnoremap <leader>gs :Gstatus<CR>
@@ -375,11 +374,13 @@ nnoremap <leader>qr :crewind<CR>
 "     rc - focus on test case and run it
 "     rs - focus on test suite and run it
 "     rp - run parallel test
+"     rm - run make
+nnoremap <leader>rm :Make<CR>
 nnoremap <leader>rt :Dispatch<CR>
 nnoremap <leader>rd :Dispatch!<CR>
-" TODO: implement rc
-" TODO: implement rs
-" TODO: implement rp
+nnoremap <expr> <leader>rc '?TEST_CASE<CR>f(' . ':Focus ~/cpp/ecn_unit_test/parallel_test -1 -t <cword><CR>``' . ':Dispatch<CR>'
+nnoremap <expr> <leader>rs '?AUTO_TEST_SUITE<CR>f(' . ':Focus ~/cpp/ecn_unit_test/parallel_test -1 -t <cword><CR>``' . ':Dispatch<CR>'
+nnoremap        <leader>rp :Focus ~/cpp/ecn_unit_test/parallel_test -1<CR>:Dispatch!<CR>
 
 " s - search
 "     sg - grep
