@@ -1,6 +1,6 @@
 set nocompatible
 
-" Load vim-plug
+" Plugins {{{1
 if empty(glob("~/.vim/autoload/plug.vim"))
     execute '!curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.github.com/junegunn/vim-plug/master/plug.vim'
 endif
@@ -27,9 +27,12 @@ Plug 'tpope/vim-unimpaired'
 Plug 'vim-scripts/VisIncr'
 Plug 'vim-scripts/argtextobj.vim'
 Plug 'wincent/terminus'
+Plug 'wincent/loupe'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 call plug#end()
+" 1}}}
 
+" Options {{{1
 set nowrap               " turn off line wrapping, turn it back on with :Wrap
 set backspace=indent,eol,start
 set nobackup             " don't create backup files (everything I edit is in version control)
@@ -58,23 +61,14 @@ set mousehide
 set confirm
 set relativenumber
 set number
+set gdefault             " turn on global searching by default
+set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
+set path+=~/cpp/**       " setup search path for gf and :find
+set complete+=i,kspell   " add include and dictionary completion
 
-" Change the mapleader to space key
-let mapleader="\<Space>"
-
-" Turn on doxygen syntax highlighting (for C++ comments)
-let g:load_doxygen_syntax=1
-
-" Add dictionary to completion set (but only if spelling is turned on)
-set complete=.,w,b,u,t,i,kspell
-                                              
-" Make searching sane
-set ignorecase
-set smartcase
-set gdefault " turn on global searching by default
-set incsearch
-set showmatch
-set nohlsearch
+if has('mouse')
+    set mouse=a
+endif
 
 " Tabs are evil, always use spaces
 set tabstop=8
@@ -82,14 +76,6 @@ set softtabstop=4
 set shiftwidth=4
 set expandtab
 set shiftround " use multiple of shiftwidth when indenting with '<' and '>'
-
-" Setup search path for gf and :find
-set path+=~/cpp/**
-
-" In many terminal emulators the mouse works just fine, thus enable it.
-if has('mouse')
-    set mouse=a
-endif
 
 " Switch syntax highlighting on, when the terminal has colors
 if &t_Co >= 8 || has("gui_running")
@@ -102,8 +88,39 @@ if &t_Co >= 8 || has("gui_running")
     " no toolbars
     set guioptions=egmc
 endif
+" 1}}}
 
-" Only do this part when compiled with support for autocommands.
+" Globals {{{1
+
+" Change the mapleader to space key
+let mapleader="\<Space>"
+
+" Turn on doxygen syntax highlighting (for C++ comments)
+let g:load_doxygen_syntax = 1
+
+" Make current match more obvious
+let g:LoupeHighlightGroup = 'Error'
+
+" Only show H1 headers. The other option is 'stacked' which shows all headers.
+let g:markdown_fold_style = 'nested'
+
+" Perty status line
+let g:airline_theme = 'base16_tomorrow'
+let g:airline#extensions#tabline#formatter = 'unique_tail'
+"let g:airline_powerline_fonts = 1
+
+" Turn off limits on max files in CtrlP
+let g:ctrlp_max_files = 0
+
+" Set nerd tree window width
+let g:NERDTreeWinSize = 30
+
+" Edit snippets smartly
+let g:UltiSnipsEditSplit="context"
+
+" 1}}}
+
+" Auto-commands {{{1
 if has("autocmd")
 
     " Enable file type detection, plugins and indentation
@@ -155,6 +172,9 @@ else
     set autoindent		" always set autoindenting on
 
 endif " has("autocmd")
+" 1}}}
+
+" Key mappings {{{1
 
 " Remap esc key for fast switching and ipad keyboards
 inoremap jj <Esc>
@@ -182,27 +202,6 @@ cnoremap <C-n> <Down>
 " Yank from the cursor to the end of the line, to be consistent with C and D.
 nnoremap Y y$
 
-" Only show H1 headers. The other option is 'stacked' which shows all headers.
-let g:markdown_fold_style = 'nested'
-
-" Perty status line
-"let g:airline_powerline_fonts = 1
-let g:airline_theme='base16_tomorrow'
-let g:airline#extensions#tabline#formatter = 'unique_tail'
-
-" Turn off limits on max files in CtrlP
-let g:ctrlp_max_files = 0
-
-" Make nerd tree window wider
-let g:NERDTreeWinSize = 60
-
-" Always use very magic mode when searching
-nnoremap / /\v
-nnoremap ? ?\v
-
-" Edit snippets in a split window
-let g:UltiSnipsEditSplit="vertical"
-
 " Stop the nonsense
 noremap q: :q
 cabbrev ew :wq
@@ -218,6 +217,7 @@ nnoremap ? ?\v
 
 " Really short shortcuts
 nnoremap <leader><leader> :
+vnoremap <leader><leader> :
 nnoremap <leader>8 :execute ":Ggrep " . expand("<cword>")<CR>
 nnoremap <leader>5 :%s/\<<C-r>=expand("<cword>")<CR>\>/
 nnoremap <leader><tab> <C-^>
@@ -416,8 +416,7 @@ nnoremap <leader>sr :%s/\<<C-r>=expand("<cword>")<CR>\>/
 "     tn - toggle line numbers
 "     tr - toggle registers
 "     tt - toggle NERDTree
-nnoremap <leader>th :set hlsearch!<CR>
-set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
+nmap <leader>th <Plug>(LoupeClearHighlight)
 nnoremap <leader>tw :set list!<CR>
 nnoremap <leader>tn :set relativenumber!<CR>:set number!<CR>
 nnoremap <leader>tr :registers<CR>
@@ -433,7 +432,9 @@ nnoremap <leader>w <C-w>
 noremap <leader>x= :Tabularize /=<CR>
 noremap <leader>x: :Tabularize /:\zs<CR>
 noremap <leader>x, :Tabularize /,\zs/l0r1<CR>
+" 1}}}
 
+" Projectionist heuristics {{{1
 " Setup projectionist heuristics (see alternate 'a' mnemonic above)
 let g:projectionist_heuristics = {
 \   '*': {
@@ -467,3 +468,4 @@ let g:projectionist_heuristics = {
 \       },
 \   },
 \}
+" }}}
