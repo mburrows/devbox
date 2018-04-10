@@ -34,7 +34,7 @@ call plug#end()
 " 1}}}
 
 " Options {{{1
-set nowrap               " turn off line wrapping, turn it back on with :Wrap
+set nowrap               " turn off line wrapping
 set backspace=indent,eol,start
 set nobackup             " don't create backup files (everything I edit is in version control)
 set noswapfile
@@ -65,7 +65,6 @@ set number
 set gdefault             " turn on global searching by default
 set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
 set path+=~/cpp/**       " setup search path for gf and :find
-set complete+=i,kspell   " add include and dictionary completion
 
 if has('mouse')
     set mouse=a
@@ -110,11 +109,11 @@ let g:airline_theme = 'base16_tomorrow'
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 "let g:airline_powerline_fonts = 1
 
-" Turn off limits on max files in CtrlP
-let g:ctrlp_max_files = 0
+" Increase CtrlP limits for large codebases
+let g:ctrlp_max_files = 20000
 
 " Set nerd tree window width
-let g:NERDTreeWinSize = 30
+let g:NERDTreeWinSize = 60
 
 " Edit snippets smartly
 let g:UltiSnipsEditSplit="context"
@@ -218,7 +217,7 @@ nnoremap ? ?\v
 " Really short shortcuts
 nnoremap <leader><leader> :
 vnoremap <leader><leader> :
-nnoremap <leader>8 :execute ":Ggrep " . expand("<cword>")<CR>
+nnoremap <leader>8 :execute ":Glgrep " . expand("<cword>")<CR>
 nnoremap <leader>5 :%s/\<<C-r>=expand("<cword>")<CR>\>/
 nnoremap <leader><tab> <C-^>
 
@@ -240,30 +239,33 @@ nnoremap <expr> <leader>ai ':Einc ' . expand('%:t:r')
 "     bd - buffer delete
 "     bc - buffer close
 "     bb - CtrlPBuffer
-"     bl - buffer list
 "     bp - buffer previous
 "     bn - buffer next
 "     br - buffer rewind
 nnoremap <leader>bd :bdelete<CR>
 nnoremap <leader>bc :bdelete<CR>
 nnoremap <leader>bb :CtrlPBuffer<CR>
-nnoremap <leader>bl :ls<CR>
 nnoremap <leader>bp :bp<CR>
 nnoremap <leader>bn :bn<CR>
 nnoremap <leader>br :brewind<CR>
 
-" c - clipboard/compilation
-"   cd - clipboard delete
-"   cy - clipboard yank
-"   cp - clipboard paste
+" c - compilation
+"   cc - compile
+"   cC - compile with arguments
+"   cd - close compilation window
 nnoremap <leader>cc :Make<CR>
-nnoremap <leader>cd "*d
-vnoremap <leader>cd "*d
-nnoremap <leader>cy "*y
-vnoremap <leader>cy "*y
-nnoremap <leader>cp "*p
-vnoremap <leader>cp "*p
-nnoremap <leader>cr :registers<CR>
+nnoremap <leader>cC :Make 
+nnoremap <leader>cd :cclose<CR> 
+
+" errors
+"   en - goto next error
+"   ep - goto previous error
+"   ed - close error window
+"   ee - open error window
+nnoremap <leader>en :cnext<CR>
+nnoremap <leader>ep :cprev<CR>
+nnoremap <leader>ed :cclose<CR>
+nnoremap <leader>ee :copen<CR>
 
 " d - delete
 "     df - delete function
@@ -275,28 +277,17 @@ nnoremap <leader>dw :%s/\s\+$//e<CR>
 " TODO: implement dl - delete empty lines
 " TODO: implement do - only one space
 
-" e - edit
-"     ee - edit %%
-"     ev - edit vertically
-"     eh - edit split (horizontally)
-"     es - edit split (horizontally)
-"     et - edit tab
-noremap <expr> <leader>ee ':edit ' . expand('%:h') .'/'
-noremap <expr> <leader>es ':split ' . expand('%:h') .'/'
-noremap <expr> <leader>eh ':split ' . expand('%:h') .'/'
-noremap <expr> <leader>ev ':vert split ' . expand('%:h') .'/'
-noremap <expr> <leader>et ':tabedit ' . expand('%:h') .'/'
-
 " f - files
 "     fs - file save
 "     fS - save all files
+"     fW - write out as sudo
 "     fv - .vimrc
 "     fr - CtrlPMRU
-"     ff - file open %%
+"     ff - CtrlP
+"     ft - NerdTree toggle
 "     fj - file jump (NerdTree locate file)
 "     fl - open last file
-"     fW - write out as sudo
-"     ft - NerdTree toggle
+"     fb - Bookmarks
 nnoremap <leader>fs :update<CR>
 nnoremap <leader>fS :wall<CR>
 nnoremap <leader>fW :w !sudo tee % >/dev/null<CR>
@@ -306,6 +297,7 @@ nnoremap <leader>ff :CtrlP<CR>
 nnoremap <leader>ft :NERDTreeToggle<CR>
 nnoremap <leader>fj :NERDTreeFind<CR>
 nnoremap <leader>fl :execute "rightbelow vsplit " . bufname('#')<CR>
+nnoremap <leader>fb :marks<CR>
 
 " g - git
 "     gg - git grep
@@ -339,7 +331,8 @@ nnoremap <leader>gr :Git rebase master
 "     hf - help functions
 "     hs - help vim scripts
 "     hr - help regexps
-"     hw - help for word under cursor
+"     hw - help for current word
+"     hm - manual for current word
 nnoremap <leader>hh :help
 nnoremap <leader>ht :tab help 
 nnoremap <leader>hv :vert help 
@@ -347,6 +340,7 @@ nnoremap <leader>hf :tab help functions<CR>
 nnoremap <leader>hs :tab help usr_41.txt<CR>
 nnoremap <leader>hr :vert help pattern-overview<CR>
 nnoremap <expr> <leader>hw ':tab help ' . expand("<cword>")
+nnoremap <expr> <leader>hm ':tab Man ' . expand("<cword>")
 
 " l - locations
 "     ll - open location list
@@ -366,11 +360,13 @@ nnoremap <leader>lr :lrewind<CR>
 
 " p - project
 "     pt - project tree
+"     pT - test project
 "     pf - open file at project root (CtrlP ~/cpp)
 "     pc - project compile
 nnoremap <leader>pf :CtrlP ~/cpp<CR>
 nnoremap <leader>pt :NERDTree ~/cpp<CR>
 nnoremap <leader>pc :Make<CR>
+nnoremap <leader>pT :Focus ~/cpp/ecn_unit_test/parallel_test -1<CR>:Dispatch!<CR>
 
 " q - quicklist
 "     qq - open quicklist
@@ -395,38 +391,43 @@ nnoremap <leader>qr :crewind<CR>
 "     rs - focus on test suite and run it
 "     rp - run parallel test
 "     rm - run make
+"     rr - show registers
 nnoremap <leader>rm :Make<CR>
 nnoremap <leader>rt :Dispatch<CR>
 nnoremap <leader>rd :Dispatch!<CR>
 nnoremap <expr> <leader>rc '?TEST_CASE<CR>f(' . ':Focus ~/cpp/ecn_unit_test/parallel_test -1 -t <cword><CR>``' . ':Dispatch<CR>'
 nnoremap <expr> <leader>rs '?AUTO_TEST_SUITE<CR>f(' . ':Focus ~/cpp/ecn_unit_test/parallel_test -1 -t <cword><CR>``' . ':Dispatch<CR>'
 nnoremap        <leader>rp :Focus ~/cpp/ecn_unit_test/parallel_test -1<CR>:Dispatch!<CR>
+nnoremap        <leader>rf :Focus ~/cpp/ecn_unit_test/parallel_test -1 -t 
+nnoremap <leader>rr :registers<CR>
 
-" s - search
+" s - search/substitute
 "     sg - grep
-"     sG - grep add
-"     sf - find
+"     sG - grep with current word
 "     st - CtrlPTag
-"     sw - search current word
-"     sr - search and replace current word
+"     sr - search and replace whole file
+"     sh - search and replace from here
+"     ss - subvert
 nnoremap <leader>sg :lvimgrep 
-nnoremap <leader>sG :lvimgrepadd 
-nnoremap <leader>sf :find 
+nnoremap <expr> <leader>sG ':lvimgrep ' . expand("<cword>")
 nnoremap <leader>st :CtrlPTag<CR>
-nnoremap <expr> <leader>sw ':lvimgrep ' . expand("<cword>")
-nnoremap <leader>sr :%s/\<<C-r>=expand("<cword>")<CR>\>/
+nnoremap <leader>sr :%s/\v
+nnoremap <leader>sh :.,$s/\v
+nnoremap <leader>ss :Subvert/
 
 " t - toggle
 "     th - toggle highlight
 "     tw - toggle whitespace
 "     tn - toggle line numbers
-"     tr - toggle registers
 "     tt - toggle NERDTree
+"     tc - toggle cursor line
+"     tl - toggle line wrap
 nmap <leader>th <Plug>(LoupeClearHighlight)
 nnoremap <leader>tw :set list!<CR>
 nnoremap <leader>tn :set relativenumber!<CR>:set number!<CR>
-nnoremap <leader>tr :registers<CR>
 nnoremap <leader>tt :NERDTreeToggle<CR>
+nnoremap <leader>tc :set cursorline!<CR>
+nnoremap <leader>tl :set wrap!<CR>
 
 " w - window
 nnoremap <leader>w <C-w>
@@ -485,8 +486,4 @@ let g:projectionist_heuristics = {
 " }}}
 
 " Miscellaneous {{{1
-
-" Turn on all the options to wrap text properly
-command! -nargs=* Wrap set wrap linebreak nolist
-
 " 1}}}
