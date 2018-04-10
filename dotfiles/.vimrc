@@ -1,3 +1,4 @@
+" vim: set foldlevel=1 foldmethod=marker:
 set nocompatible
 
 " Plugins {{{1
@@ -150,6 +151,8 @@ if has("autocmd")
         autocmd BufNewFile,BufRead *.sqli setfiletype sql
         autocmd BufNewFile,BufRead *.md   setfiletype markdown
         autocmd BufNewFile,BufRead *.cir  setfiletype spice
+        autocmd BufNewFile,BufRead */ecn/* compiler gcc
+        autocmd BufNewFile,BufRead */ecn/* setlocal makeprg=~/cpp/bb\ debug\ -j32\ -o\ /tmp/build/clang
 
         " FileType local options
         autocmd FileType text setlocal textwidth=120
@@ -183,9 +186,6 @@ cnoremap jj <Esc>
 " Make opening of files in the same directory easier, and use %% in command
 " mode to expand the directory of the current file.
 cnoremap %% <C-R>=expand('%:h').'/'<cr>
-
-" Turn on all the options to wrap text properly
-command! -nargs=* Wrap set wrap linebreak nolist
 
 " Select just pasted text
 nnoremap gp `[v`]
@@ -334,12 +334,18 @@ nnoremap <leader>gr :Git rebase master
 
 " h - help
 "     hh - help
+"     ht - help tab
+"     hv - help vertically
 "     hf - help functions
 "     hs - help vim scripts
-nnoremap <leader>hh :tab help 
+"     hr - help regexps
+"     hw - help for word under cursor
+nnoremap <leader>hh :help
+nnoremap <leader>ht :tab help 
 nnoremap <leader>hv :vert help 
 nnoremap <leader>hf :tab help functions<CR>
 nnoremap <leader>hs :tab help usr_41.txt<CR>
+nnoremap <leader>hr :vert help pattern-overview<CR>
 nnoremap <expr> <leader>hw ':tab help ' . expand("<cword>")
 
 " l - locations
@@ -432,15 +438,23 @@ nnoremap <leader>w <C-w>
 noremap <leader>x= :Tabularize /=<CR>
 noremap <leader>x: :Tabularize /:\zs<CR>
 noremap <leader>x, :Tabularize /,\zs/l0r1<CR>
+
+" z - folds
+"   zz - toggle current fold
+"   zi - fold by indent
+"   zm - fold by marker
+"   zu - fold manually
+noremap <leader>zz zA
+noremap <leader>zi :setlocal foldmethod=indent<CR>
+noremap <leader>zi :setlocal foldmethod=indent<CR>
+noremap <leader>zm :setlocal foldmethod=marker<CR>
+noremap <leader>zu :setlocal foldmethod=manual<CR>
 " 1}}}
 
 " Projectionist heuristics {{{1
 " Setup projectionist heuristics (see alternate 'a' mnemonic above)
 let g:projectionist_heuristics = {
 \   '*': {
-\       'ecn/*': {
-\           'make': '~/cpp/bb\ debug\ -j32\ -o\ /tmp/build/clang'
-\       },
 \       '*.cpp': {
 \           'alternate': '{}.h',
 \           'type': 'source',
@@ -469,3 +483,10 @@ let g:projectionist_heuristics = {
 \   },
 \}
 " }}}
+
+" Miscellaneous {{{1
+
+" Turn on all the options to wrap text properly
+command! -nargs=* Wrap set wrap linebreak nolist
+
+" 1}}}
