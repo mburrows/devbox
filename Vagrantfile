@@ -7,6 +7,5 @@ Vagrant.configure("2") do |config|
         v.customize ["modifyvm", :id, "--memory", "1024"]
     end
 
-    config.vm.provision "file", source: "dotfiles/.", destination: "~"
     config.vm.provision :shell, :privileged => false, :path => File.join( "provision", "provision.sh" )
 end

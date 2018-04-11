@@ -40,6 +40,8 @@ call SpaceVim#layers#load('lang#vim')
 
 let g:spacevim_custom_plugins = [
 \['chriskempson/base16-vim'],
+\['christoomey/vim-tmux-navigator'],
+\['edkolev/tmuxline.vim'],
 \]
 
 call SpaceVim#custom#SPC('nnoremap', ['f', 'j'], 'NERDTreeFind', 'Jump to file in tree', 1)
