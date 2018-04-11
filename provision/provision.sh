@@ -65,6 +65,7 @@ link_dot init.vim $HOME/.SpaceVim.d/init.vim
 link_dot .tmux.conf $HOME/.tmux.conf 
 link_dot .inputrc $HOME/.inputrc 
 link_dot .tmuxline.conf $HOME/.tmuxline.conf 
+link_dot .gitconfig $HOME/.gitconfig 
 
 # Install some perty colours for the shell
 if [ ! -d "$HOME/.config/base16-shell" ] ; then

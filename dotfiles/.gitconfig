@@ -1,3 +1,5 @@
 [user]
 	email = maburrow@googlemail.com
 	name = Matt Burrows
+[push]
+	default = simple
