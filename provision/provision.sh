@@ -1,4 +1,4 @@
-sudo add-apt-repository -y ppa:neovim-ppa/unstable
+sudo add-apt-repository -y ppa:neovim-ppa/stable
 
 sudo apt-get update && sudo apt-get -y upgrade && sudo apt-get -y autoremove
 

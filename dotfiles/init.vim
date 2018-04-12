@@ -33,7 +33,7 @@ let g:spacevim_custom_plugins = [
 " }}}
 
 " SpaceVim Layers: {{{
-call SpaceVim#layers#load('ctrlp')
+call SpaceVim#layers#load('denite')
 call SpaceVim#layers#load('git')
 call SpaceVim#layers#load('VersionControl')
 call SpaceVim#layers#load('tags')
