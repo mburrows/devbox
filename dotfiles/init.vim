@@ -49,7 +49,7 @@ call SpaceVim#layers#load('autocomplete', {
             \ 'auto-completion-complete-with-key-sequence' : 'jk',
             \ 'auto-completion-complete-with-key-sequence-delay' : 0.2,
             \ })
-" }}}
+" " }}}
 
 " Custom keybindings {{{
 call SpaceVim#custom#SPC('nnoremap', ['f', 'j'], 'NERDTreeFind', 'jump to file in tree', 1)
@@ -67,6 +67,13 @@ augroup filetype_cpp
     autocmd BufNewFile,BufRead */ecn/* :NeomakeDisableBuffer
 
     autocmd FileType cpp  setlocal commentstring=//\ %s
+
+    if filereadable("/opt/bats/lib/libclang.so")
+        let g:deoplete#sources#clang#clang_complete_database = '/home/mburrows/cpp/compile_commands.json'
+        let g:deoplete#sources#clang#clang_header = '/opt/bats/include/clang'
+        let g:deoplete#sources#clang#libclang_path = '/opt/bats/lib/libclang.so'
+        let g:deoplete#sources#clang#std#cpp  =  'c++11'
+    endif
 augroup END
 
 augroup neomake_hooks
