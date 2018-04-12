@@ -107,7 +107,7 @@ let g:markdown_fold_style = 'nested'
 " Perty status line
 let g:airline_theme = 'base16_tomorrow'
 let g:airline#extensions#tabline#formatter = 'unique_tail'
-"let g:airline_powerline_fonts = 1
+let g:airline_powerline_fonts = 1
 
 " Increase CtrlP limits for large codebases
 let g:ctrlp_max_files = 20000
@@ -146,10 +146,10 @@ if has("autocmd")
         autocmd BufReadPost fugitive://* set bufhidden=delete
 
         " FileType overrides
-        autocmd BufNewFile,BufRead *.inc  setfiletype cpp
         autocmd BufNewFile,BufRead *.sqli setfiletype sql
         autocmd BufNewFile,BufRead *.md   setfiletype markdown
         autocmd BufNewFile,BufRead *.cir  setfiletype spice
+        autocmd BufNewFile,BufRead *.inc  setfiletype cpp
         autocmd BufNewFile,BufRead */ecn/* compiler gcc
         autocmd BufNewFile,BufRead */ecn/* setlocal makeprg=~/cpp/bb\ debug\ -j32\ -o\ /tmp/build/clang
 
@@ -314,6 +314,7 @@ nnoremap <leader>fb :marks<CR>
 nnoremap <leader>gg :Glgrep 
 nnoremap <leader>gc :Gcommit<CR>
 nnoremap <leader>gd :Gdiff<CR>
+nnoremap <leader>gd :Gdiff<CR>
 nnoremap <leader>go :Gdiff origin<CR>
 nnoremap <leader>gs :Gstatus<CR>
 nnoremap <leader>gb :Gblame<CR>
@@ -385,21 +386,17 @@ nnoremap <leader>qc :cclose<CR>
 nnoremap <leader>qr :crewind<CR>
 
 " r - run tests
-"     rt - run test (dispatch)
-"     rd - run test (dispatch!)
-"     rc - focus on test case and run it
-"     rs - focus on test suite and run it
+"     rd - run tests (dispatch)
+"     rD - run tests (dispatch!)
 "     rp - run parallel test
-"     rm - run make
+"     rf - focus on test
 "     rr - show registers
-nnoremap <leader>rm :Make<CR>
-nnoremap <leader>rt :Dispatch<CR>
-nnoremap <leader>rd :Dispatch!<CR>
-nnoremap <expr> <leader>rc '?TEST_CASE<CR>f(' . ':Focus ~/cpp/ecn_unit_test/parallel_test -1 -t <cword><CR>``' . ':Dispatch<CR>'
-nnoremap <expr> <leader>rs '?AUTO_TEST_SUITE<CR>f(' . ':Focus ~/cpp/ecn_unit_test/parallel_test -1 -t <cword><CR>``' . ':Dispatch<CR>'
-nnoremap        <leader>rp :Focus ~/cpp/ecn_unit_test/parallel_test -1<CR>:Dispatch!<CR>
-nnoremap        <leader>rf :Focus ~/cpp/ecn_unit_test/parallel_test -1 -t 
+nnoremap <leader>rd :Dispatch<CR>
+nnoremap <leader>rD :Dispatch!<CR>
+nnoremap <leader>rp :FocusDispatch ~/cpp/ecn_unit_test/parallel_test -1<CR>
+nnoremap <leader>rf :FocusDispatch ~/cpp/ecn_unit_test/parallel_test -1 -t 
 nnoremap <leader>rr :registers<CR>
+nnoremap <leader>rl :copen<CR><C-w>L<CR>
 
 " s - search/substitute
 "     sg - grep
@@ -446,7 +443,6 @@ noremap <leader>x, :Tabularize /,\zs/l0r1<CR>
 "   zm - fold by marker
 "   zu - fold manually
 noremap <leader>zz zA
-noremap <leader>zi :setlocal foldmethod=indent<CR>
 noremap <leader>zi :setlocal foldmethod=indent<CR>
 noremap <leader>zm :setlocal foldmethod=marker<CR>
 noremap <leader>zu :setlocal foldmethod=manual<CR>
