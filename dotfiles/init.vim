@@ -28,27 +28,55 @@ let g:spacevim_custom_plugins = [
 \['chriskempson/base16-vim'],
 \['edkolev/tmuxline.vim'],
 \['vim-scripts/argtextobj.vim'],
+\['tpope/vim-unimpaired'],
 \]
 " }}}
 
 " SpaceVim Layers: {{{
-call SpaceVim#layers#load('denite')
-call SpaceVim#layers#load('autocomplete')
-call SpaceVim#layers#load('colorscheme')
+call SpaceVim#layers#load('ctrlp')
 call SpaceVim#layers#load('git')
 call SpaceVim#layers#load('VersionControl')
 call SpaceVim#layers#load('tags')
 call SpaceVim#layers#load('github')
 call SpaceVim#layers#load('tmux')
+call SpaceVim#layers#load('shell')
 call SpaceVim#layers#load('lang#c')
 call SpaceVim#layers#load('lang#python')
 call SpaceVim#layers#load('lang#vim')
+
+call SpaceVim#layers#load('autocomplete', {
+            \ 'auto-completion-return-key-behavior' : 'complete',
+            \ 'auto-completion-complete-with-key-sequence' : 'jk',
+            \ 'auto-completion-complete-with-key-sequence-delay' : 0.2,
+            \ })
 " }}}
 
-
+" Custom keybindings {{{
 call SpaceVim#custom#SPC('nnoremap', ['f', 'j'], 'NERDTreeFind', 'jump to file in tree', 1)
 call SpaceVim#custom#SPC('nnoremap', ['a', 'a'], 'A', 'alternate file', 1)
+call SpaceVim#custom#SPC('nnoremap', ['p', 'm'], 'Neomake!', 'project make', 1)
+" }}}
 
+" Auto commands {{{
+augroup filetype_cpp
+    autocmd!
+
+    autocmd BufNewFile,BufRead *.inc   setfiletype cpp
+    autocmd BufNewFile,BufRead */ecn/* compiler gcc
+    autocmd BufNewFile,BufRead */ecn/* setlocal makeprg=~/cpp/bb\ debug\ -j32\ -o\ /tmp/build/clang
+    autocmd BufNewFile,BufRead */ecn/* :NeomakeDisableBuffer
+
+    autocmd FileType cpp  setlocal commentstring=//\ %s
+augroup END
+
+augroup neomake_hooks
+    autocmd!
+    autocmd User NeomakeJobInit :echom "Build started"
+    autocmd User NeomakeJobFinished :echom "Build complete"
+augroup END
+" }}}
+
+" Projectionist heuristics {{{
 let g:projectionist_heuristics = {
 \   '*': {
 \       '*.cpp': {
@@ -78,3 +106,14 @@ let g:projectionist_heuristics = {
 \       },
 \   },
 \}
+" }}}
+
+" Miscellaneous {{{
+
+set path+=~/cpp/**
+set wildmode=longest,list,full
+
+let g:ctrlp_max_files = 20000
+let g:NERDTreeWinSize = 60
+
+" }}}
