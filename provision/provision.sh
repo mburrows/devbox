@@ -10,6 +10,8 @@ sudo apt-get -y install x11-apps xauth xclip
 
 # Dev tools
 sudo apt-get -y install git
+sudo apt-get -y install exuberant-ctags
+sudo apt-get -y install silversearcher-ag
 
 # C++ environment
 sudo apt-get -y install cmake
@@ -31,42 +33,48 @@ sudo pip2 install --upgrade neovim
 sudo pip3 install --upgrade neovim
 sudo gem install neovim
 
-if [ ! -d "$HOME/.config/nvim" ] ; then
-    mkdir -p $HOME/.config/nvim
-    cat << 'EOS' > $HOME/.config/nvim/init.vim
-set runtimepath^=~/.vim runtimepath+=~/.vim/after
-let &packpath = &runtimepath
-source ~/.vimrc
-EOS
+# Install SpaceVim
+if [ ! -d "$HOME/.SpaceVim" ]; then
+    curl -sLf https://spacevim.org/install.sh | bash
 fi
 
-# Install Vundle plugin for vim
-if [ ! -d "$HOME/.vim/bundle" ] ; then
-    git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
-    echo "Vundle installed. Now run: vim +PluginInstall +qall"
-fi
+function link_dot 
+{
+    SOURCE_FILE=/vagrant/dotfiles/$1
+    TARGET_FILE=$2
+    TARGET_DIR=`dirname $2`    
+    
+    if [ ! -f "$SOURCE_FILE" ]; then
+        echo "$SOURCE_FILE does not exist"
+        return
+    fi
+
+    if [ ! -d "$TARGET_DIR" ] ; then
+        mkdir -p $TARGET_DIR
+    fi
+
+    if [ -f "$TARGET_FILE" ]; then
+        echo "$TARGET_FILE already exist"
+        return
+    fi
+
+    ln -s $SOURCE_FILE $TARGET_FILE
+}
+
+link_dot init.vim $HOME/.SpaceVim.d/init.vim
+link_dot .tmux.conf $HOME/.tmux.conf 
+link_dot .inputrc $HOME/.inputrc 
+link_dot .tmuxline.conf $HOME/.tmuxline.conf 
+link_dot .gitconfig $HOME/.gitconfig 
 
 # Install some perty colours for the shell
 if [ ! -d "$HOME/.config/base16-shell" ] ; then
     git clone https://github.com/chriskempson/base16-shell.git $HOME/.config/base16-shell
 fi
-    
-# Setup local bashrc overrides
+
 if [ ! -f "$HOME/.bashrc.local" ] ; then
-    cat << 'EOS' > $HOME/.bashrc.local
-source ~/.config/base16-shell/scripts/base16-tomorrow-night.sh
-
-export EDITOR=vim
-export PS1="\[\e[32m\]\u\[\e[m\]\[\e[32m\]:\[\e[m\]\[\e[35m\]\W\[\e[m\]\[\e[37m\]\\$\[\e[m\] "
-
-alias rl='source ~/.bashrc'
-alias g='git grep'
-alias l='ls -lrt'
-alias tmux='tmux -2'
-EOS
-
+    link_dot .bashrc.local $HOME/.bashrc.local
     cat << 'EOS' >> $HOME/.bashrc
-
 [[ -f ~/.bashrc.local ]] && . ~/.bashrc.local
 EOS
 fi

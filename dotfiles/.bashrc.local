@@ -1,0 +1,9 @@
+source ~/.config/base16-shell/scripts/base16-tomorrow-night.sh
+
+export EDITOR=nvim
+export PS1="\[\e[32m\]\u\[\e[m\]\[\e[32m\]:\[\e[m\]\[\e[35m\]\w\[\e[m\]\[\e[37m\]\\$\[\e[m\] "
+
+alias rl='source ~/.bashrc'
+alias g='git grep'
+alias l='ls -lrt'
+alias tmux='tmux -2'
