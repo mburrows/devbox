@@ -26,9 +26,8 @@ let g:spacevim_filemanager = 'nerdtree'
 
 let g:spacevim_custom_plugins = [
 \['chriskempson/base16-vim'],
-\['christoomey/vim-tmux-navigator'],
 \['edkolev/tmuxline.vim'],
-\['tpope/vim-projectionist'],
+\['vim-scripts/argtextobj.vim'],
 \]
 " }}}
 
@@ -40,6 +39,7 @@ call SpaceVim#layers#load('git')
 call SpaceVim#layers#load('VersionControl')
 call SpaceVim#layers#load('tags')
 call SpaceVim#layers#load('github')
+call SpaceVim#layers#load('tmux')
 call SpaceVim#layers#load('lang#c')
 call SpaceVim#layers#load('lang#python')
 call SpaceVim#layers#load('lang#vim')
