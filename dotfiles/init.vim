@@ -23,6 +23,7 @@ let g:spacevim_buffer_index_type = 4
 let g:spacevim_windows_index_type = 3
 let g:spacevim_github_username = 'mburrows'
 let g:spacevim_filemanager = 'nerdtree'
+let g:spacevim_windows_smartclose = ''
 
 let g:spacevim_custom_plugins = [
 \['chriskempson/base16-vim'],
@@ -40,6 +41,7 @@ call SpaceVim#layers#load('tags')
 call SpaceVim#layers#load('github')
 call SpaceVim#layers#load('tmux')
 call SpaceVim#layers#load('shell')
+call SpaceVim#layers#load('incsearch')
 call SpaceVim#layers#load('lang#c')
 call SpaceVim#layers#load('lang#python')
 call SpaceVim#layers#load('lang#vim')
@@ -49,7 +51,7 @@ call SpaceVim#layers#load('autocomplete', {
             \ 'auto-completion-complete-with-key-sequence' : 'jk',
             \ 'auto-completion-complete-with-key-sequence-delay' : 0.2,
             \ })
-" " }}}
+" }}}
 
 " Custom keybindings {{{
 call SpaceVim#custom#SPC('nnoremap', ['f', 'j'], 'NERDTreeFind', 'jump to file in tree', 1)
@@ -116,11 +118,8 @@ let g:projectionist_heuristics = {
 " }}}
 
 " Miscellaneous {{{
-
 set path+=~/cpp/**
 set wildmode=longest,list,full
 
-let g:ctrlp_max_files = 20000
 let g:NERDTreeWinSize = 60
-
 " }}}
