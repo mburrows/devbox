@@ -1,5 +1,42 @@
 [user]
 	email = maburrow@googlemail.com
 	name = Matt Burrows
+
 [push]
 	default = simple
+
+[color]
+    ui = true
+
+[alias]
+    st = status
+    ci = commit
+    co = checkout
+    br = branch
+    me = "!git log --author='mburrows'"
+    ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
+    lastwk = "!git ls --author='mburrows' --since='1 week'"
+    slog = svn log --oneline --show-commit
+    recommit = commit --amend -C HEAD
+    this = "!git init && git add . && git commit -m 'Initial commit'"
+    ignore = "!f() { ([ ! -e .gitignore ] && touch .gitignore) | echo $1 >>.gitignore; }; f"
+    rgrep = grep -n --break 
+    vdiff = difftool -w 
+
+[core]
+    pager = less -FRXS
+    editor = nvim
+
+[merge]
+    tool = vimdiff
+    summary = true
+
+[credential]
+    helper = cache
+
+[http]
+    sslVerify = false
+
+[diff]
+    tool = vimdiff
+

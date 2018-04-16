@@ -29,11 +29,12 @@ let g:spacevim_custom_plugins = [
 \['edkolev/tmuxline.vim'],
 \['vim-scripts/argtextobj.vim'],
 \['tpope/vim-unimpaired'],
+\['dag/vim-fish'],
 \]
 " }}}
 
 " SpaceVim Layers: {{{
-call SpaceVim#layers#load('denite')
+call SpaceVim#layers#load('ctrlp')
 call SpaceVim#layers#load('git')
 call SpaceVim#layers#load('VersionControl')
 call SpaceVim#layers#load('tags')
@@ -56,6 +57,7 @@ call SpaceVim#layers#load('autocomplete', {
 call SpaceVim#custom#SPC('nnoremap', ['f', 'j'], 'NERDTreeFind', 'jump to file in tree', 1)
 call SpaceVim#custom#SPC('nnoremap', ['a', 'a'], 'A', 'alternate file', 1)
 call SpaceVim#custom#SPC('nnoremap', ['p', 'm'], 'Neomake!', 'project make', 1)
+call SpaceVim#custom#SPC('nnoremap', ['b', 'b'], 'CtrlPBuffer', 'select buffer', 1)
 " }}}
 
 " Auto commands {{{
@@ -79,7 +81,6 @@ augroup END
 
 augroup neomake_hooks
     autocmd!
-    autocmd User NeomakeJobInit :echom "Build started"
     autocmd User NeomakeJobFinished :echom "Build complete"
 augroup END
 " }}}
@@ -121,4 +122,5 @@ set path+=~/cpp/**
 set wildmode=longest,list,full
 
 let g:NERDTreeWinSize = 60
+let g:ctrlp_max_files = 20000
 " }}}
