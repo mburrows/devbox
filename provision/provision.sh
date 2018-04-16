@@ -66,6 +66,7 @@ link_dot .tmux.conf $HOME/.tmux.conf
 link_dot .inputrc $HOME/.inputrc 
 link_dot .tmuxline.conf $HOME/.tmuxline.conf 
 link_dot .gitconfig $HOME/.gitconfig 
+link_dot config.fish $HOME/.config/fish/config.fish
 
 # Install some perty colours for the shell
 if [ ! -d "$HOME/.config/base16-shell" ] ; then
