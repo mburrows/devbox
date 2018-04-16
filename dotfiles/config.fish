@@ -14,3 +14,8 @@ abbr -a gl="git log"
 abbr -a g1="git log --oneline"
 abbr -a ga="git add -u"
 # }}}
+
+# Aliases {{{
+alias tmux="tmux -2"
+alias rl="source ~/.config/fish/config.fish"
+# }}}
