@@ -7,3 +7,8 @@ alias rl='source ~/.bashrc'
 alias g='git grep'
 alias l='ls -lrt'
 alias tmux='tmux -2'
+
+# Start a fish shell if we have one
+if [ -f /usr/bin/fish ] ; then
+    exec /usr/bin/fish
+fi
