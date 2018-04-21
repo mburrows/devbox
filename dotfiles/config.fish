@@ -1,5 +1,7 @@
 # vim: set ft=fish foldmethod=marker:
 
+set -x CDPATH . .. ~
+
 # Abbreviations {{{
 abbr -a gs="git status"
 abbr -a gd="git diff -w"
