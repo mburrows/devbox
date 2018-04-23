@@ -20,7 +20,6 @@ abbr -a gu="git add -u"
 # Aliases {{{
 alias g="git --no-pager grep -n --break"
 alias rl="source ~/.config/fish/config.fish"
-alias tmux="tmux -2"
 # }}}
 
 # Functions {{{

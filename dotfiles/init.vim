@@ -61,6 +61,9 @@ call SpaceVim#custom#SPC('nnoremap', ['p', 'm'], 'Neomake!', 'project make', 1)
 call SpaceVim#custom#SPC('nnoremap', ['b', 'b'], 'CtrlPBuffer', 'select buffer', 1)
 call SpaceVim#custom#SPC('nnoremap', ['j', 'i'], 'CtrlPBufTag', 'jump to a tag', 1)
 call SpaceVim#custom#SPC('nnoremap', ['p', 'i'], 'CtrlPTag', 'find project tag', 1)
+
+" Map return key to replay last macro
+nnoremap <expr> <CR> empty(&buftype) ? '@@' : '<CR>'
 " }}}
 
 " Auto commands {{{
