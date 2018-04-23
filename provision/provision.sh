@@ -8,6 +8,9 @@ sudo apt-get -y install dos2unix
 # Basic X11 windowing
 sudo apt-get -y install x11-apps xauth xclip
 
+# Install the friendly interactive shell
+sudo apt-get -y install fish
+
 # Dev tools
 sudo apt-get -y install git
 sudo apt-get -y install exuberant-ctags
