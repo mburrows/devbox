@@ -29,6 +29,7 @@ let g:spacevim_custom_plugins = [
 \['edkolev/tmuxline.vim'],
 \['vim-scripts/argtextobj.vim'],
 \['tpope/vim-unimpaired'],
+\['tpope/vim-abolish'],
 \['dag/vim-fish'],
 \]
 " }}}
@@ -58,6 +59,8 @@ call SpaceVim#custom#SPC('nnoremap', ['f', 'j'], 'NERDTreeFind', 'jump to file i
 call SpaceVim#custom#SPC('nnoremap', ['a', 'a'], 'A', 'alternate file', 1)
 call SpaceVim#custom#SPC('nnoremap', ['p', 'm'], 'Neomake!', 'project make', 1)
 call SpaceVim#custom#SPC('nnoremap', ['b', 'b'], 'CtrlPBuffer', 'select buffer', 1)
+call SpaceVim#custom#SPC('nnoremap', ['j', 'i'], 'CtrlPBufTag', 'jump to a tag', 1)
+call SpaceVim#custom#SPC('nnoremap', ['p', 'i'], 'CtrlPTag', 'find project tag', 1)
 " }}}
 
 " Auto commands {{{
@@ -70,13 +73,6 @@ augroup filetype_cpp
     autocmd BufNewFile,BufRead */ecn/* :NeomakeDisableBuffer
 
     autocmd FileType cpp  setlocal commentstring=//\ %s
-
-    if filereadable("/opt/bats/lib/libclang.so")
-        let g:deoplete#sources#clang#clang_complete_database = '/home/mburrows/cpp/compile_commands.json'
-        let g:deoplete#sources#clang#clang_header = '/opt/bats/include/clang'
-        let g:deoplete#sources#clang#libclang_path = '/opt/bats/lib/libclang.so'
-        let g:deoplete#sources#clang#std#cpp  =  'c++11'
-    endif
 augroup END
 
 augroup neomake_hooks
