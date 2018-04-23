@@ -64,6 +64,14 @@ call SpaceVim#custom#SPC('nnoremap', ['p', 'i'], 'CtrlPTag', 'find project tag',
 
 " Map return key to replay last macro
 nnoremap <expr> <CR> empty(&buftype) ? '@@' : '<CR>'
+
+" Map cursor keys to quickfix navigation
+nnoremap <silent> <Up>    :cprevious<CR>
+nnoremap <silent> <Down>  :cnext<CR>
+nnoremap <silent> <Left>  :cpfile<CR>
+nnoremap <silent> <Right> :cnfile<CR>
+
+cnoremap %% <C-R>=expand('%:h').'/'<CR>
 " }}}
 
 " Auto commands {{{
