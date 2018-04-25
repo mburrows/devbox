@@ -36,6 +36,9 @@ sudo pip2 install --upgrade neovim
 sudo pip3 install --upgrade neovim
 sudo gem install neovim
 
+# Install tmuxinator
+sudo gem install tmuxinator
+
 # Install SpaceVim
 if [ ! -d "$HOME/.SpaceVim" ]; then
     curl -sLf https://spacevim.org/install.sh | bash
@@ -70,7 +73,6 @@ link_dot .inputrc $HOME/.inputrc
 link_dot .tmuxline.conf $HOME/.tmuxline.conf 
 link_dot .gitconfig $HOME/.gitconfig 
 link_dot config.fish $HOME/.config/fish/config.fish
-link_dot tmux.fish $HOME/.config/fish/functions/tmux.fish
 
 # Install some perty colours for the shell
 if [ ! -d "$HOME/.config/base16-shell" ] ; then
