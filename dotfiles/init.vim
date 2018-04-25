@@ -1,11 +1,6 @@
 "=============================================================================
 " dark_powered.vim --- Dark powered mode of SpaceVim
-" Copyright (c) 2016-2017 Wang Shidong & Contributors
-" Author: Wang Shidong < wsdjeg at 163.com >
-" URL: https://spacevim.org
-" License: GPLv3
 "=============================================================================
-
 
 " SpaceVim Options: {{{
 let g:spacevim_enable_debug = 1
@@ -131,3 +126,5 @@ set wildmode=longest,list,full
 let g:NERDTreeWinSize = 60
 let g:ctrlp_max_files = 20000
 " }}}
+
+" vim: foldmethod=marker:
