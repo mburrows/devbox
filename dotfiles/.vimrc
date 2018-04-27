@@ -30,6 +30,8 @@ Plug 'vim-scripts/argtextobj.vim'
 Plug 'wincent/terminus'
 Plug 'wincent/loupe'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+Plug 'sgur/ctrlp-extensions.vim'
+Plug 'mileszs/ack.vim'
 call plug#end()
 " 1}}}
 
@@ -95,9 +97,6 @@ endif
 " Change the mapleader to space key
 let mapleader="\<Space>"
 
-" Turn on doxygen syntax highlighting (for C++ comments)
-let g:load_doxygen_syntax = 1
-
 " Make current match more obvious
 let g:LoupeHighlightGroup = 'Error'
 
@@ -118,6 +117,10 @@ let g:NERDTreeWinSize = 60
 " Edit snippets smartly
 let g:UltiSnipsEditSplit="context"
 
+" Use the silver searcher if available
+if executable('ag')
+    let g:ackprg = 'ag --vimgrep'
+endif
 " 1}}}
 
 " Auto-commands {{{1
@@ -179,8 +182,8 @@ endif " has("autocmd")
 " Key mappings {{{1
 
 " Remap esc key for fast switching and ipad keyboards
-inoremap jj <Esc>
-cnoremap jj <Esc>
+inoremap jk <Esc>
+cnoremap jk <Esc>
 
 " Make opening of files in the same directory easier, and use %% in command
 " mode to expand the directory of the current file.
@@ -217,9 +220,10 @@ nnoremap ? ?\v
 " Really short shortcuts
 nnoremap <leader><leader> :
 vnoremap <leader><leader> :
-nnoremap <leader>8 :execute ":Glgrep " . expand("<cword>")<CR>
-nnoremap <leader>5 :%s/\<<C-r>=expand("<cword>")<CR>\>/
 nnoremap <leader><tab> <C-^>
+nnoremap <tab> <C-w><C-w>
+nnoremap <leader>/ :LAck 
+nnoremap <leader>* :LAck <C-r>=expand("<cword>")<CR> ~/cpp
 
 " a - alternates
 "     aa - alternate file
@@ -278,52 +282,47 @@ nnoremap <leader>dw :%s/\s\+$//e<CR>
 " TODO: implement do - only one space
 
 " f - files
-"     fs - file save
 "     fS - save all files
 "     fW - write out as sudo
-"     fv - .vimrc
-"     fr - CtrlPMRU
 "     ff - CtrlP
-"     ft - NerdTree toggle
 "     fj - file jump (NerdTree locate file)
 "     fl - open last file
-"     fb - Bookmarks
-nnoremap <leader>fs :update<CR>
+"     fr - CtrlPMRU
+"     fs - file save
+"     ft - NerdTree toggle
+"     fv - .vimrc
 nnoremap <leader>fS :wall<CR>
 nnoremap <leader>fW :w !sudo tee % >/dev/null<CR>
-nnoremap <leader>fv :tabedit ~/.vimrc<CR>
-nnoremap <leader>fr :CtrlPMRUFiles<CR>
 nnoremap <leader>ff :CtrlP<CR>
-nnoremap <leader>ft :NERDTreeToggle<CR>
 nnoremap <leader>fj :NERDTreeFind<CR>
 nnoremap <leader>fl :execute "rightbelow vsplit " . bufname('#')<CR>
-nnoremap <leader>fb :marks<CR>
+nnoremap <leader>fr :CtrlPMRUFiles<CR>
+nnoremap <leader>fs :update<CR>
+nnoremap <leader>ft :NERDTreeToggle<CR>
+nnoremap <leader>fv :tabedit ~/.vimrc<CR>
 
 " g - git
-"     gg - git grep
-"     gs - git status
-"     gc - git commit
 "     gb - git blame
+"     gc - git commit
 "     gd - git diff
+"     gl - git log
 "     go - git diff origin
+"     gp - git stash pop
+"     gr - git rebase master
+"     gs - git status
 "     gv - git svnup
 "     gz - git stash
-"     gp - git stash pop
-"     gl - git log
-"     gr - git rebase master
-nnoremap <leader>gg :Glgrep 
+nnoremap <leader>g1 :Git log --oneline<CR>
+nnoremap <leader>gb :Gblame<CR>
 nnoremap <leader>gc :Gcommit<CR>
 nnoremap <leader>gd :Gdiff<CR>
-nnoremap <leader>gd :Gdiff<CR>
+nnoremap <leader>gf :Gpull<CR>
+nnoremap <leader>gl :Gllog<CR>
 nnoremap <leader>go :Gdiff origin<CR>
+nnoremap <leader>gr :Git rebase master
 nnoremap <leader>gs :Gstatus<CR>
-nnoremap <leader>gb :Gblame<CR>
 nnoremap <leader>gv :Git svnup<CR>
 nnoremap <leader>gz :Git stash<CR>
-nnoremap <leader>gp :Git stash pop<CR>
-nnoremap <leader>gl :Gllog<CR>
-nnoremap <leader>g1 :Git log --oneline<CR>
-nnoremap <leader>gr :Git rebase master
 
 " h - help
 "     hh - help
@@ -334,83 +333,101 @@ nnoremap <leader>gr :Git rebase master
 "     hr - help regexps
 "     hw - help for current word
 "     hm - manual for current word
+"     hk - help with keymap
 nnoremap <leader>hh :help
 nnoremap <leader>ht :tab help 
 nnoremap <leader>hv :vert help 
+nnoremap <expr> <leader>hi ':tab help ' . expand("<cword>")
+nnoremap <expr> <leader>hm ':tab Man ' . expand("<cword>")
 nnoremap <leader>hf :tab help functions<CR>
 nnoremap <leader>hs :tab help usr_41.txt<CR>
 nnoremap <leader>hr :vert help pattern-overview<CR>
-nnoremap <expr> <leader>hw ':tab help ' . expand("<cword>")
-nnoremap <expr> <leader>hm ':tab Man ' . expand("<cword>")
+nnoremap <leader>hk :map<CR>
+
+" j - jumps
+"     je - jump to registers
+"     jh - jump to yank ring history
+"     ji - jump to tag (in buffer)
+"     ju - jump to undo
+nnoremap <leader>je :registers<CR>
+nnoremap <leader>jh :CtrlPYankring<CR>
+nnoremap <leader>ji :CtrlPBufTag<CR>
+nnoremap <leader>ju :CtrlPUndo<CR>
 
 " l - locations
+"     lb - previous location file
+"     lc - close location list
+"     lf - next location file
 "     ll - open location list
 "     ln - next location
 "     lp - previous location
-"     lf - next location file
-"     lb - previous location file
-"     lc - close location list
 "     lr - rewind location list
+nnoremap <leader>lb :lpfile<CR>
+nnoremap <leader>lc :lclose<CR>
+nnoremap <leader>ld :lclose<CR>
+nnoremap <leader>lf :lnfile<CR>
 nnoremap <leader>ll :lwindow 15<CR>
 nnoremap <leader>ln :lnext<CR>
 nnoremap <leader>lp :lprev<CR>
-nnoremap <leader>lf :lnfile<CR>
-nnoremap <leader>lb :lpfile<CR>
-nnoremap <leader>lc :lclose<CR>
 nnoremap <leader>lr :lrewind<CR>
 
 " p - project
+"     pf - open file at project root
+"     pi - find project tag
 "     pt - project tree
 "     pT - test project
-"     pf - open file at project root (CtrlP ~/cpp)
 "     pc - project compile
-nnoremap <leader>pf :CtrlP ~/cpp<CR>
+"     ps - project search
+"     pS - project search with current word
+nnoremap <leader>pf :CtrlPRoot<CR>
+nnoremap <leader>pi :CtrlPTag<CR>
 nnoremap <leader>pt :NERDTree ~/cpp<CR>
-nnoremap <leader>pc :Make<CR>
+nnoremap <leader>pm :Make<CR>
 nnoremap <leader>pT :Focus ~/cpp/ecn_unit_test/parallel_test -1<CR>:Dispatch!<CR>
+nnoremap <leader>ps :Glgrep 
+nnoremap <leader>pS :Glgrep <C-r>=expand("<cword>")<CR>
 
 " q - quicklist
-"     qq - open quicklist
-"     qn - next item
-"     qp - previous item
-"     qf - next file
 "     qb - previous file
 "     qc - close quicklist
+"     qf - next file
+"     qn - next item
+"     qp - previous item
+"     qq - open quicklist
 "     qr - rewind quicklist
-nnoremap <leader>qq :cwindow 15<CR>
-nnoremap <leader>qn :cnext<CR>
-nnoremap <leader>qp :cprev<CR>
-nnoremap <leader>qf :cnfile<CR>
 nnoremap <leader>qb :cpfile<CR>
 nnoremap <leader>qc :cclose<CR>
+nnoremap <leader>qd :cclose<CR>
+nnoremap <leader>qf :cnfile<CR>
+nnoremap <leader>qn :cnext<CR>
+nnoremap <leader>qp :cprev<CR>
+nnoremap <leader>qq :cwindow 15<CR>
 nnoremap <leader>qr :crewind<CR>
 
 " r - run tests
-"     rd - run tests (dispatch)
-"     rD - run tests (dispatch!)
+"     rt - run tests (dispatch!)
 "     rp - run parallel test
 "     rf - focus on test
-"     rr - show registers
-nnoremap <leader>rd :Dispatch<CR>
-nnoremap <leader>rD :Dispatch!<CR>
+"     rl - resume last fuzzy find
+nnoremap <leader>rt :Dispatch!<CR>
 nnoremap <leader>rp :FocusDispatch ~/cpp/ecn_unit_test/parallel_test -1<CR>
 nnoremap <leader>rf :FocusDispatch ~/cpp/ecn_unit_test/parallel_test -1 -t 
-nnoremap <leader>rr :registers<CR>
-nnoremap <leader>rl :copen<CR><C-w>L<CR>
+nnoremap <leader>rl :CtrlPLastMode<CR>
 
 " s - search/substitute
-"     sg - grep
-"     sG - grep with current word
-"     st - CtrlPTag
+"     ss - search
+"     sS - search with current word
+"     sD - search with current word in current directory
 "     sr - search and replace whole file
 "     sh - search and replace from here
-"     ss - subvert
-nnoremap <leader>sg :lvimgrep 
-nnoremap <expr> <leader>sG ':lvimgrep ' . expand("<cword>")
-nnoremap <leader>st :CtrlPTag<CR>
+"     sv - subvert
+nnoremap <leader>ss :LAck 
+nnoremap <leader>sS :LAck <C-r>=expand("<cword>")<CR> 
+nnoremap <leader>sD :LAck <C-r>=expand("<cword>")<CR> <C-r>=expand('%:h').'/'<CR>
 nnoremap <leader>sr :%s/\v
+nnoremap <leader>sR :%s/\<<C-r>=expand("<cword>")<CR>\>/
 nnoremap <leader>sh :.,$s/\v
-nnoremap <leader>ss :Subvert/
+nnoremap <leader>sv :Subvert/
 
 " t - toggle
 "     th - toggle highlight
@@ -436,6 +453,7 @@ nnoremap <leader>w <C-w>
 noremap <leader>x= :Tabularize /=<CR>
 noremap <leader>x: :Tabularize /:\zs<CR>
 noremap <leader>x, :Tabularize /,\zs/l0r1<CR>
+noremap <leader>xo :call JustOneSpace()<CR>
 
 " z - folds
 "   zz - toggle current fold
@@ -482,4 +500,32 @@ let g:projectionist_heuristics = {
 " }}}
 
 " Miscellaneous {{{1
+
+" Replace many spaces with one in Vim
+" With help from Al: http://stackoverflow.com/questions/1228100/substituting-zero-width-match-in-vim-script
+
+function! JustOneSpace()
+    " Get the current contents of the current line
+    let current_line = getline(".")
+
+    " Get the current cursor position
+    let cursor_position = getpos(".")
+
+    " Generate a match using the column number of the current cursor position
+    let matchre = '\s*\%' . cursor_position[2] . 'c\s*'
+    let pos = match(current_line, matchre) + 2
+
+    " Modify the line by replacing with one space
+    let modified_line = substitute(current_line, matchre, " ", "")
+
+    " Modify the cursor position to handle the change in string length
+    let cursor_position[2] = pos
+
+    " Set the line in the window
+    call setline(".", modified_line)
+
+    " Reset the cursor position
+    call setpos(".", cursor_position)
+endfunction
+
 " 1}}}

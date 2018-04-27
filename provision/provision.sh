@@ -22,27 +22,21 @@ sudo apt-get -y install clang
 sudo apt-get -y install libboost-dev
 sudo apt-get -y install gdb
 
-# Python/matplotlib
+# Install python2 support with numerical libraries
+sudo apt-get -y install python-dev python-pip 
 sudo apt-get -y install ipython python-numpy python-matplotlib python-scipy
 
-# Circuit simulation using SPICE
-sudo apt-get -y install ngspice
+# Install python3 support
+sudo apt-get -y install python3-dev python3-pip
 
-# Install neovim and optional provider plugins
-sudo apt-get -y install neovim
-sudo apt-get -y install python-dev python-pip python3-dev python3-pip
+# Install ruby support
 sudo apt-get -y install ruby ruby-dev
-sudo pip2 install --upgrade neovim
-sudo pip3 install --upgrade neovim
-sudo gem install neovim
 
 # Install tmuxinator
 sudo gem install tmuxinator
 
-# Install SpaceVim
-if [ ! -d "$HOME/.SpaceVim" ]; then
-    curl -sLf https://spacevim.org/install.sh | bash
-fi
+# Circuit simulation using SPICE
+sudo apt-get -y install ngspice
 
 function link_dot 
 {
@@ -67,7 +61,6 @@ function link_dot
     ln -s $SOURCE_FILE $TARGET_FILE
 }
 
-link_dot init.vim $HOME/.SpaceVim.d/init.vim
 link_dot .tmux.conf $HOME/.tmux.conf 
 link_dot .inputrc $HOME/.inputrc 
 link_dot .tmuxline.conf $HOME/.tmuxline.conf 
