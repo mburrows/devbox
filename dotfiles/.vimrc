@@ -284,6 +284,7 @@ nnoremap <leader>dw :%s/\s\+$//e<CR>
 " f - files
 "     fS - save all files
 "     fW - write out as sudo
+"     fb - find bookmarks
 "     ff - CtrlP
 "     fj - file jump (NerdTree locate file)
 "     fl - open last file
@@ -293,6 +294,7 @@ nnoremap <leader>dw :%s/\s\+$//e<CR>
 "     fv - .vimrc
 nnoremap <leader>fS :wall<CR>
 nnoremap <leader>fW :w !sudo tee % >/dev/null<CR>
+nnoremap <leader>fb :marks<CR>
 nnoremap <leader>ff :CtrlP<CR>
 nnoremap <leader>fj :NERDTreeFind<CR>
 nnoremap <leader>fl :execute "rightbelow vsplit " . bufname('#')<CR>
@@ -336,21 +338,17 @@ nnoremap <leader>gz :Git stash<CR>
 "     hk - help with keymap
 nnoremap <leader>hh :help
 nnoremap <leader>ht :tab help 
+nnoremap <leader>hs :split help
 nnoremap <leader>hv :vert help 
 nnoremap <expr> <leader>hi ':tab help ' . expand("<cword>")
 nnoremap <expr> <leader>hm ':tab Man ' . expand("<cword>")
 nnoremap <leader>hf :tab help functions<CR>
-nnoremap <leader>hs :tab help usr_41.txt<CR>
 nnoremap <leader>hr :vert help pattern-overview<CR>
-nnoremap <leader>hk :map<CR>
+nnoremap <leader>hk :map 
 
 " j - jumps
-"     je - jump to registers
-"     jh - jump to yank ring history
 "     ji - jump to tag (in buffer)
 "     ju - jump to undo
-nnoremap <leader>je :registers<CR>
-nnoremap <leader>jh :CtrlPYankring<CR>
 nnoremap <leader>ji :CtrlPBufTag<CR>
 nnoremap <leader>ju :CtrlPUndo<CR>
 
@@ -404,15 +402,23 @@ nnoremap <leader>qp :cprev<CR>
 nnoremap <leader>qq :cwindow 15<CR>
 nnoremap <leader>qr :crewind<CR>
 
-" r - run tests
-"     rt - run tests (dispatch!)
-"     rp - run parallel test
-"     rf - focus on test
-"     rl - resume last fuzzy find
-nnoremap <leader>rt :Dispatch!<CR>
-nnoremap <leader>rp :FocusDispatch ~/cpp/ecn_unit_test/parallel_test -1<CR>
-nnoremap <leader>rf :FocusDispatch ~/cpp/ecn_unit_test/parallel_test -1 -t 
+" r - registers/resume
+"     rr - show registers
+"     ry - show yank kill ring
+"     rl - resume last completion window
+"     rb - show bookmarks
+nnoremap <leader>rr :registers<CR>
+nnoremap <leader>ry :CtrlPYankring<CR>
 nnoremap <leader>rl :CtrlPLastMode<CR>
+nnoremap <leader>rb :marks<CR>
+
+" u - unit tests
+"     ut - run unit tests (dispatch!)
+"     up - run parallel unit test
+"     uf - focus on unit test
+nnoremap <leader>ut :Dispatch!<CR>
+nnoremap <leader>up :FocusDispatch ~/cpp/ecn_unit_test/parallel_test -1<CR>
+nnoremap <leader>uf :FocusDispatch ~/cpp/ecn_unit_test/parallel_test -1 -t 
 
 " s - search/substitute
 "     ss - search
@@ -450,10 +456,13 @@ nnoremap <leader>w <C-w>
 "     x= - align on -
 "     x: - align on :
 "     x, - align on ,
+"     xs - squash space
+"     xo - just one line
 noremap <leader>x= :Tabularize /=<CR>
 noremap <leader>x: :Tabularize /:\zs<CR>
 noremap <leader>x, :Tabularize /,\zs/l0r1<CR>
-noremap <leader>xo :call JustOneSpace()<CR>
+noremap <leader>xs :call SquashSpace()<CR>
+noremap <leader>xo cip<Esc>
 
 " z - folds
 "   zz - toggle current fold
@@ -504,7 +513,7 @@ let g:projectionist_heuristics = {
 " Replace many spaces with one in Vim
 " With help from Al: http://stackoverflow.com/questions/1228100/substituting-zero-width-match-in-vim-script
 
-function! JustOneSpace()
+function! SquashSpace()
     " Get the current contents of the current line
     let current_line = getline(".")
 
