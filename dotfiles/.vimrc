@@ -32,6 +32,7 @@ Plug 'wincent/terminus'
 Plug 'wincent/loupe'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'mileszs/ack.vim'
+Plug 'dbakker/vim-projectroot'
 call plug#end()
 " 1}}}
 
@@ -67,6 +68,7 @@ set number
 set gdefault             " turn on global searching by default
 set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
 set path+=~/cpp/**       " setup search path for gf and :find
+set nowrapscan           " don't wrap on searches
 
 if has('mouse')
     set mouse=a
@@ -135,6 +137,9 @@ if has("autocmd")
     " they don't get sourced twice when we reload our .vimrc
     augroup vimrcEx
         autocmd!
+
+        " Automatically change the project root from the current file
+        autocmd BufEnter * call <SID>AutoProjectRootCD()
 
         " When editing a file, always jump to the last known cursor position.
         autocmd BufReadPost *
@@ -222,8 +227,8 @@ nnoremap <leader><leader> :
 vnoremap <leader><leader> :
 nnoremap <leader><tab> <C-^>
 nnoremap <tab> <C-w><C-w>
-nnoremap <leader>/ :LAck 
-nnoremap <leader>* :LAck <C-r>=expand("<cword>")<CR> ~/cpp
+nnoremap <leader>/ :FindInProjectRoot 
+nnoremap <expr> <leader>* ':FindInProjectRoot ' . expand("<cword>")
 
 " a - alternates
 "     aa - alternate file
@@ -270,6 +275,8 @@ nnoremap <leader>en :cnext<CR>
 nnoremap <leader>ep :cprev<CR>
 nnoremap <leader>ed :cclose<CR>
 nnoremap <leader>ee :copen<CR>
+nnoremap <leader>ef :cnfile<CR>
+nnoremap <leader>eb :cpfile<CR>
 
 " d - delete
 "     df - delete function
@@ -379,11 +386,11 @@ nnoremap <leader>lr :lrewind<CR>
 "     pS - project search with current word
 nnoremap <leader>pf :CtrlPRoot<CR>
 nnoremap <leader>pi :CtrlPTag<CR>
-nnoremap <leader>pt :NERDTree ~/cpp<CR>
+nnoremap <expr> <leader>pt ':NERDTree ' . projectroot#guess() . '<CR>'
 nnoremap <leader>pm :Make<CR>
 nnoremap <leader>pT :Focus ~/cpp/ecn_unit_test/parallel_test -1<CR>:Dispatch!<CR>
-nnoremap <leader>ps :Glgrep 
-nnoremap <leader>pS :Glgrep <C-r>=expand("<cword>")<CR>
+nnoremap <expr> <leader>ps ':FindInProjectRoot ' 
+nnoremap <expr> <leader>pS ':FindInProjectRoot ' . expand("<cword>")
 
 " q - quicklist
 "     qb - previous file
@@ -407,6 +414,7 @@ nnoremap <leader>qr :crewind<CR>
 "     ry - show yank kill ring
 "     rl - resume last completion window
 "     rb - show bookmarks
+nnoremap <leader>re :registers<CR>
 nnoremap <leader>rr :registers<CR>
 nnoremap <leader>ry :CtrlPYankring<CR>
 nnoremap <leader>rl :CtrlPLastMode<CR>
@@ -425,15 +433,20 @@ nnoremap <leader>uf :FocusDispatch ~/cpp/ecn_unit_test/parallel_test -1 -t
 "     sS - search with current word
 "     sD - search with current word in current directory
 "     sr - search and replace whole file
+"     sR - search and replace whole file with current word
 "     sh - search and replace from here
+"     sH - search and replace from here with current word
 "     sv - subvert
+"     sc - turn off search highlighting
 nnoremap <leader>ss :LAck 
-nnoremap <leader>sS :LAck <C-r>=expand("<cword>")<CR> 
-nnoremap <leader>sD :LAck <C-r>=expand("<cword>")<CR> <C-r>=expand('%:h').'/'<CR>
+nnoremap <expr> <leader>sS ':LAck ' . expand("<cword>")
+nnoremap <expr> <leader>sD ':LAck ' . expand("<cword>") . ' ' . expand('%:h')
 nnoremap <leader>sr :%s/\v
-nnoremap <leader>sR :%s/\<<C-r>=expand("<cword>")<CR>\>/
+nnoremap <expr> <leader>sR ':%s/\<' . expand("<cword>") . '\>/'
 nnoremap <leader>sh :.,$s/\v
+nnoremap <expr> <leader>sH ':.,$s/\<' . expand("<cword>") . '\>/'
 nnoremap <leader>sv :Subvert/
+nmap <leader>sc <Plug>(LoupeClearHighlight)
 
 " t - toggle
 "     th - toggle highlight
@@ -535,6 +548,23 @@ function! SquashSpace()
 
     " Reset the cursor position
     call setpos(".", cursor_position)
+endfunction
+
+" Wrapper function for finding patterns in the project root
+function! FindInProjectRoot(pattern)
+    execute ':LAck ' . a:pattern . ' ' . projectroot#guess()
+endfunction
+command! -nargs=1 FindInProjectRoot :call FindInProjectRoot(<f-args>)
+
+" Change project root from the current file
+function! <SID>AutoProjectRootCD()
+  try
+    if &ft != 'help'
+      ProjectRootCD
+    endif
+  catch
+    " Silently ignore invalid buffers
+  endtry
 endfunction
 
 " 1}}}
