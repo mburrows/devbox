@@ -28,6 +28,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'vim-scripts/VisIncr'
 Plug 'vim-scripts/argtextobj.vim'
+Plug 'kana/vim-textobj-function' | Plug 'kana/vim-textobj-user'
 Plug 'wincent/terminus'
 Plug 'wincent/loupe'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
@@ -254,8 +255,8 @@ nnoremap <expr> <leader>ai ':Einc ' . expand('%:t:r')
 nnoremap <leader>bd :bdelete<CR>
 nnoremap <leader>bc :bdelete<CR>
 nnoremap <leader>bb :CtrlPBuffer<CR>
-nnoremap <leader>bp :bp<CR>
-nnoremap <leader>bn :bn<CR>
+nnoremap <leader>bp :bprev<CR>
+nnoremap <leader>bn :bnext<CR>
 nnoremap <leader>br :brewind<CR>
 
 " c - compilation
@@ -274,19 +275,16 @@ nnoremap <leader>cd :cclose<CR>
 nnoremap <leader>en :cnext<CR>
 nnoremap <leader>ep :cprev<CR>
 nnoremap <leader>ed :cclose<CR>
+nnoremap <leader>ec :cclose<CR>
 nnoremap <leader>ee :copen<CR>
 nnoremap <leader>ef :cnfile<CR>
 nnoremap <leader>eb :cpfile<CR>
 
 " d - delete
-"     df - delete function
 "     dw - delete trailing whitespace
 "     dl - delete empty lines
 "     do - only one space
 nnoremap <leader>dw :%s/\s\+$//e<CR>
-" TODO: implement df - delete function
-" TODO: implement dl - delete empty lines
-" TODO: implement do - only one space
 
 " f - files
 "     fS - save all files
@@ -471,11 +469,13 @@ nnoremap <leader>w <C-w>
 "     x, - align on ,
 "     xs - squash space
 "     xo - just one line
+"     xw - delete trailing whitespace
 noremap <leader>x= :Tabularize /=<CR>
 noremap <leader>x: :Tabularize /:\zs<CR>
 noremap <leader>x, :Tabularize /,\zs/l0r1<CR>
 noremap <leader>xs :call SquashSpace()<CR>
 noremap <leader>xo cip<Esc>
+noremap <leader>xw :%s/\s\+$//e<CR> 
 
 " z - folds
 "   zz - toggle current fold
