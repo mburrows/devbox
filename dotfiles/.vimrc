@@ -11,9 +11,10 @@ Plug 'airblade/vim-gitgutter'
 Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'edkolev/tmuxline.vim'
 Plug 'craigemery/vim-autotag'
 Plug 'ctrlpvim/ctrlp.vim'
-Plug 'edkolev/tmuxline.vim'
+Plug 'sgur/ctrlp-extensions.vim'
 Plug 'godlygeek/tabular'
 Plug 'scrooloose/nerdtree'
 Plug 'terryma/vim-expand-region'
@@ -30,7 +31,6 @@ Plug 'vim-scripts/argtextobj.vim'
 Plug 'wincent/terminus'
 Plug 'wincent/loupe'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-Plug 'sgur/ctrlp-extensions.vim'
 Plug 'mileszs/ack.vim'
 call plug#end()
 " 1}}}
@@ -85,7 +85,7 @@ if &t_Co >= 8 || has("gui_running")
     set t_Co=256
     set background=dark                                  
     let base16colorspace=256  " Access colors present in 256 colorspace
-    colorscheme base16-tomorrow-night
+    silent! colorscheme base16-tomorrow-night
     " tabs, grey out inactive menus, menu bar, console dialogs, no scrollbars,
     " no toolbars
     set guioptions=egmc

@@ -59,6 +59,7 @@ function link_dot
     ln -s $SOURCE_FILE $TARGET_FILE
 }
 
+link_dot .vimrc $HOME/.vimrc 
 link_dot .tmux.conf $HOME/.tmux.conf 
 link_dot .inputrc $HOME/.inputrc 
 link_dot .tmuxline.conf $HOME/.tmuxline.conf 
