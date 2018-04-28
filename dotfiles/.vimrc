@@ -309,13 +309,17 @@ nnoremap <leader>ft :NERDTreeToggle<CR>
 nnoremap <leader>fv :tabedit ~/.vimrc<CR>
 
 " g - git
+"     g1 - git short log
 "     gb - git blame
 "     gc - git commit
 "     gd - git diff
-"     gl - git log
+"     gD - git diff master
 "     go - git diff origin
-"     gp - git stash pop
-"     gr - git rebase master
+"     gf - git pull
+"     gg - git grep
+"     gG - git grep with current word
+"     gl - git log
+"     gp - git push
 "     gs - git status
 "     gv - git svnup
 "     gz - git stash
@@ -323,13 +327,17 @@ nnoremap <leader>g1 :Git log --oneline<CR>
 nnoremap <leader>gb :Gblame<CR>
 nnoremap <leader>gc :Gcommit<CR>
 nnoremap <leader>gd :Gdiff<CR>
-nnoremap <leader>gf :Gpull<CR>
-nnoremap <leader>gl :Gllog<CR>
+nnoremap <leader>gD :Gdiff master<CR>
 nnoremap <leader>go :Gdiff origin<CR>
-nnoremap <leader>gr :Git rebase master
+nnoremap <leader>gf :Gpull<CR>
+nnoremap <leader>gg :Glgrep 
+nnoremap <expr> <leader>gG ':Glgrep ' . expand("<cword>")
+nnoremap <leader>gl :Gllog<CR>
+nnoremap <leader>gp :Gpush<CR>
 nnoremap <leader>gs :Gstatus<CR>
 nnoremap <leader>gv :Git svnup<CR>
 nnoremap <leader>gz :Git stash<CR>
+nnoremap <leader>gZ :Git stash pop<CR>
 
 " h - help
 "     hh - help
@@ -440,8 +448,8 @@ nnoremap <leader>uf :FocusDispatch ~/cpp/ecn_unit_test/parallel_test -1 -t
 "     sc - turn off search highlighting
 nnoremap <leader>ss :LAck 
 nnoremap <expr> <leader>sS ':LAck ' . expand("<cword>")
-nnoremap <leader>sd :FindInCWD 
-nnoremap <expr> <leader>sD ':FindInCWD ' . expand("<cword>")
+nnoremap <leader>sd :FindInDir 
+nnoremap <expr> <leader>sD ':FindInDir ' . expand("<cword>")
 nnoremap <leader>sr :%s/\v
 nnoremap <expr> <leader>sR ':%s/\<' . expand("<cword>") . '\>/'
 nnoremap <leader>sh :.,$s/\v
@@ -561,10 +569,10 @@ endfunction
 command! -nargs=1 FindInProjectRoot :call FindInProjectRoot(<f-args>)
 
 " Wrapper function for finding patterns in the directory of the current file
-function! FindInCWD(pattern)
+function! FindInDir(pattern)
     execute ':LAck ' . a:pattern . ' ' . expand('%:h')
 endfunction
-command! -nargs=1 FindInCWD :call FindInCWD(<f-args>)
+command! -nargs=1 FindInDir :call FindInDir(<f-args>)
 
 " Change project root from the current file
 function! <SID>AutoProjectRootCD()
