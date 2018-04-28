@@ -32,7 +32,7 @@
     summary = true
 
 [credential]
-    helper = cache
+	helper = cache --timeout 28800
 
 [http]
     sslVerify = false
