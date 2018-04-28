@@ -429,21 +429,25 @@ nnoremap <leader>uf :FocusDispatch ~/cpp/ecn_unit_test/parallel_test -1 -t
 " s - search/substitute
 "     ss - search
 "     sS - search with current word
-"     sD - search with current word in current directory
+"     sd - search in current files directory
+"     sD - search with current word in current files directory
 "     sr - search and replace whole file
 "     sR - search and replace whole file with current word
 "     sh - search and replace from here
 "     sH - search and replace from here with current word
 "     sv - subvert
+"     sV - subvert with current word
 "     sc - turn off search highlighting
 nnoremap <leader>ss :LAck 
 nnoremap <expr> <leader>sS ':LAck ' . expand("<cword>")
-nnoremap <expr> <leader>sD ':LAck ' . expand("<cword>") . ' ' . expand('%:h')
+nnoremap <leader>sd :FindInCWD 
+nnoremap <expr> <leader>sD ':FindInCWD ' . expand("<cword>")
 nnoremap <leader>sr :%s/\v
 nnoremap <expr> <leader>sR ':%s/\<' . expand("<cword>") . '\>/'
 nnoremap <leader>sh :.,$s/\v
 nnoremap <expr> <leader>sH ':.,$s/\<' . expand("<cword>") . '\>/'
-nnoremap <leader>sv :Subvert/
+nnoremap <leader>sv :%Subvert/
+nnoremap <expr> <leader>sV ':%Subvert/' . expand("<cword>") . '/'
 nmap <leader>sc <Plug>(LoupeClearHighlight)
 
 " t - toggle
@@ -555,6 +559,12 @@ function! FindInProjectRoot(pattern)
     execute ':LAck ' . a:pattern . ' ' . projectroot#guess()
 endfunction
 command! -nargs=1 FindInProjectRoot :call FindInProjectRoot(<f-args>)
+
+" Wrapper function for finding patterns in the directory of the current file
+function! FindInCWD(pattern)
+    execute ':LAck ' . a:pattern . ' ' . expand('%:h')
+endfunction
+command! -nargs=1 FindInCWD :call FindInCWD(<f-args>)
 
 " Change project root from the current file
 function! <SID>AutoProjectRootCD()
