@@ -125,6 +125,7 @@ set wildmode=longest,list,full
 
 let g:NERDTreeWinSize = 60
 let g:ctrlp_max_files = 20000
+let g:deoplete#enable_at_startup = 0
 " }}}
 
 " vim: foldmethod=marker:
