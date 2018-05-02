@@ -499,17 +499,6 @@ noremap <leader>zi :setlocal foldmethod=indent<CR>
 noremap <leader>zm :setlocal foldmethod=marker<CR>
 noremap <leader>zu :setlocal foldmethod=manual<CR>
 
-" Colemak mode
-noremap n j
-noremap e k
-noremap i l
-noremap k n
-noremap s i
-noremap j e
-
-nmap <C-N> <C-J>
-nmap <C-E> <C-K>
-nmap <C-I> <C-L>
 " 1}}}
 
 " Projectionist heuristics {{{1
@@ -598,3 +587,4 @@ function! <SID>AutoProjectRootCD()
 endfunction
 
 " 1}}}
+
