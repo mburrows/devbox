@@ -432,7 +432,7 @@ nnoremap <leader>rb :marks<CR>
 "     uf - focus on unit test
 nnoremap <leader>ut :Dispatch!<CR>
 nnoremap <leader>up :FocusDispatch ~/cpp/ecn_unit_test/parallel_test -1<CR>
-nnoremap <leader>uf :FocusDispatch ~/cpp/ecn_unit_test/parallel_test -1 -t 
+nnoremap <expr> <leader>uf ':FocusDispatch ~/cpp/ecn_unit_test/parallel_test -1 -t ' . expand("<cword>")
 
 " s - search/substitute
 "     ss - search
@@ -498,6 +498,18 @@ noremap <leader>zz zA
 noremap <leader>zi :setlocal foldmethod=indent<CR>
 noremap <leader>zm :setlocal foldmethod=marker<CR>
 noremap <leader>zu :setlocal foldmethod=manual<CR>
+
+" Colemak mode
+noremap n j
+noremap e k
+noremap i l
+noremap k n
+noremap s i
+noremap j e
+
+nmap <C-N> <C-J>
+nmap <C-E> <C-K>
+nmap <C-I> <C-L>
 " 1}}}
 
 " Projectionist heuristics {{{1
