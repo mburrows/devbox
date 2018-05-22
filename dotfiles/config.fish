@@ -22,6 +22,8 @@ abbr -a gg="git --no-pager grep -n --break"
 alias g="git --no-pager grep -n --break"
 alias rl="source ~/.config/fish/config.fish"
 alias mux="tmuxinator"
+alias tmux="~/local/bin/tmux -2"
+alias e="emacsclient -n"
 # }}}
 
 # Functions {{{
@@ -29,6 +31,7 @@ alias mux="tmuxinator"
 
 # Miscellaneous {{{
 set -x GTAGSFORCECPP 1
+set -x EDITOR emacsclient
 
 # Load BATS configuration (it it exists)
 if test -f ~/.config/fish/bats.fish
